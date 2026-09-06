@@ -1,7 +1,8 @@
-using Microsoft.EntityFrameworkCore;
+using exam_system.Common.Middleware;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace exam_system.Persistence;
 
@@ -23,7 +24,7 @@ public static class DependencyInjection
 
 
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
+        services.AddScoped<TransactionMiddleware>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
