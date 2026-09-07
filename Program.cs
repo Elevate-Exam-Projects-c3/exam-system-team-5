@@ -18,7 +18,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddMapsterConfig();
 
+//validation on Request
+builder.Services.AddFluentValidationAutoValidation();
+
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
 
 var app = builder.Build();
 

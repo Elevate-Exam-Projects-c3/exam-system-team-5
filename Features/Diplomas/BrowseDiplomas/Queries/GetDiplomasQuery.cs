@@ -4,5 +4,5 @@ using MediatR;
 
 namespace exam_system.Features.Diplomas.BrowseDiplomas.Queries
 {
-    public record GetDiplomasQuery(Guid StudentId,int PageIndex = 1,int PageSize = 10) : IRequest<RequestResponse<PaginatedResult<DiplomaItemsResponse>>>;
+    public record GetDiplomasQuery(Guid StudentId,int PageIndex,int PageSize) : IRequest<RequestResponse<PaginatedResult<DiplomaItemsResponse>>>;
 }

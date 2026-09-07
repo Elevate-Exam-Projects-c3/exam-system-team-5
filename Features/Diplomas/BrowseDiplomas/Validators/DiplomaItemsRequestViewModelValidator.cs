@@ -4,9 +4,9 @@ using FluentValidation;
 
 namespace exam_system.Features.Diplomas.BrowseDiplomas.Validators
 {
-    public class GetDiplomasQueryValidator : AbstractValidator<GetDiplomasQuery>
+    public class DiplomaItemsRequestViewModelValidator : AbstractValidator<DiplomaItemsRequestViewModel>
     {
-        public GetDiplomasQueryValidator()
+        public DiplomaItemsRequestViewModelValidator()
         {
             RuleFor(x => x.PageIndex)
               .GreaterThan(0)
