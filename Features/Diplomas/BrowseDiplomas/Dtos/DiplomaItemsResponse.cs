@@ -4,6 +4,6 @@
     Guid Id,
     string Title,
     string? Description,
-    int CompletedQuizzes,
+    int StudentProgressPercentage,
     int TotalQuizzes);
 }

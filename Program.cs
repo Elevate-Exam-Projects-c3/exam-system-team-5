@@ -4,6 +4,7 @@ using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -15,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddPersistenceServices(builder.Configuration);
-
+builder.Services.AddMapsterConfig();
 
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -48,9 +49,10 @@ if (app.Environment.IsDevelopment())
     });
 }
 //transaction middleware registeration 
-app.UseMiddleware<TransactionMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<TransactionMiddleware>();
 app.UseAuthorization();
 
 // Test Minimal API Endpoint to verify database access and generic repository
