@@ -1,5 +1,5 @@
-﻿using exam_system.DTOs;
-using exam_system.Features.Identity.Register.Commands;
+﻿using exam_system.Features.Identity.Register.Commands;
+using exam_system.Features.Identity.Register.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
