@@ -28,13 +28,13 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Controllers
         }
 
         [HttpGet("GetStudentDiploma")]
-        public async Task<IActionResult> GetStudentDiploma([FromQuery] int pageIndex = 1, [FromQuery] int pageSize = 10 , CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetStudentDiploma([FromQuery] DiplomaItemsRequestViewModel request, CancellationToken cancellationToken = default)
         {
             //test
             Guid studentId = new Guid("aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa");
 
 
-            var getDiplomasQueryResult = await _mediator.Send(new GetDiplomasQuery(studentId, pageIndex,pageSize),cancellationToken);
+            var getDiplomasQueryResult = await _mediator.Send(new GetDiplomasQuery(studentId, request.PageIndex, request.PageSize),cancellationToken);
 
             if (!getDiplomasQueryResult.Success)
             {
