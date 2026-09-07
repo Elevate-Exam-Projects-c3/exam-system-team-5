@@ -31,12 +31,14 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
     public IQueryable<T> GetAll()
     {
-        return _dbSet;
+        //add AsNoTracking
+        return _dbSet.AsNoTracking();
     }
 
     public IQueryable<T> Get(Expression<Func<T, bool>> predicate)
     {
-        return _dbSet.Where(predicate);
+        //add AsNoTracking
+        return _dbSet.AsNoTracking().Where(predicate);
     }
 
     public async Task AddAsync(T entity)
