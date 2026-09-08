@@ -103,4 +103,9 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         Delete(entity); // Use soft delete
         return Task.CompletedTask;
     }
+
+    public void Add(T entity)
+    {
+        _dbSet.Add(entity);
+    }
 }
