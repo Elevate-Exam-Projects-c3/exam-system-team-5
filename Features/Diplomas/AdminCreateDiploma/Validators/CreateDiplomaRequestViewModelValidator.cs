@@ -1,4 +1,4 @@
-﻿using exam_system.Features.Diplomas.AdminCreateDiploma.Commands.ViewModels;
+﻿using exam_system.Features.Diplomas.AdminCreateDiploma.Controllers.ViewModels;
 using FluentValidation;
 
 namespace exam_system.Features.Diplomas.AdminCreateDiploma.Validators

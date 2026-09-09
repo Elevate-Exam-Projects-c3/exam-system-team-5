@@ -1,6 +1,6 @@
 ﻿using Azure;
 using exam_system.Features.Diplomas.AdminCreateDiploma.Commands;
-using exam_system.Features.Diplomas.AdminCreateDiploma.Commands.ViewModels;
+using exam_system.Features.Diplomas.AdminCreateDiploma.Controllers.ViewModels;
 using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
