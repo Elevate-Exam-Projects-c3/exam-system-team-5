@@ -1,4 +1,5 @@
 ﻿using exam_system.Features.Diplomas.AdminUpdateDiploma.Controllers;
+using exam_system.Features.Diplomas.AdminUpdateDiploma.Controllers.ViewModels;
 using FluentValidation;
 
 namespace exam_system.Features.Diplomas.AdminUpdateDiploma.Validators
@@ -7,7 +8,7 @@ namespace exam_system.Features.Diplomas.AdminUpdateDiploma.Validators
     {
         public UpdateDiplomaViewModelValidator() 
         {
-            RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("Diploma Id is required.");
+           // RuleFor(x => x.Id).NotEqual(Guid.Empty).WithMessage("Diploma Id is required.");
 
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Diploma Title is required.")
