@@ -10,7 +10,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opt =>
+opt.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 // Add services from different layers
@@ -76,6 +77,7 @@ app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma> diplomaRepo,
 .WithName("GetTestDiplomas")
 .WithTags("Test");
 app.UseMiddleware<TransactionMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();

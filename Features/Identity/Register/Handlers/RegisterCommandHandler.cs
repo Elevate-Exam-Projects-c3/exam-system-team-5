@@ -1,5 +1,6 @@
 ﻿using exam_system.Common.Enums;
 using exam_system.Common.Interfaces;
+using exam_system.Common.Results;
 using exam_system.Domain.Entities.Identity;
 using exam_system.Features.Identity.Register.Commands;
 using exam_system.Persistence.DataAccess;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace exam_system.Features.Identity.Register.Handlers
 {
-    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Guid>
+    public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Result>
     {
         private readonly IGenericRepository<ApplicationUser> _userRepository;
         private readonly IGenericRepository<EmailVerificationOtp> _otpRepository;
@@ -25,7 +26,7 @@ namespace exam_system.Features.Identity.Register.Handlers
             _otpRepository = otpRepository;
             _mailService = mailService;
         }
-        public async Task<Guid> Handle(RegisterCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
             //Get the email from the request and convert it to lowercase for consistency
             string email = request.Email.ToLower();
@@ -68,7 +69,7 @@ namespace exam_system.Features.Identity.Register.Handlers
                 <p>Your verification code is: <strong>{rawOtp}</strong></p>
                 <p>This code will expire in 10 minutes.</p>";
             await _mailService.SendEmailAsync(newUser.Email, "Verify Your Email", emailBody, cancellationToken);
-            return newUser.Id;
+            return Result.Success();
 
         }
     }

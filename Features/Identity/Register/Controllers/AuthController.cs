@@ -1,5 +1,6 @@
 ﻿using exam_system.Features.Identity.Register.Commands;
 using exam_system.Features.Identity.Register.DTOs;
+using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,15 +20,13 @@ namespace exam_system.Features.Identity.Register.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto request, CancellationToken cancellationToken)
         {
-           
-            var command = new RegisterCommand(request.FullName, request.Email, request.Password);
-            var userId = await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send
+                (new RegisterCommand(request.FullName, request.Email, request.Password), cancellationToken);
 
-            return StatusCode(StatusCodes.Status201Created, new
-            {
-                UserId = userId,
-                Message = "Registration successful. Please check your email for the verification code."
-            });
+            return result.IsSuccess
+                ? StatusCode(StatusCodes.Status201Created,
+                ApiResponse.Ok("Registration successful. Please check your email for the verification code."))
+                : BadRequest(ApiResponse.Fail(result.ErrorMessage));
         }
     }
 }
