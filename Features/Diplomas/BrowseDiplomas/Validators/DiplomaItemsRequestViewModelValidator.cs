@@ -13,8 +13,10 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Validators
               .WithMessage("Page index must be greater than 0.");
 
             RuleFor(x => x.PageSize)
-                .GreaterThan(0)
-                .WithMessage("Page size must be greater than 0.");
+                .GreaterThanOrEqualTo(1)
+                .WithMessage("Page size must be at least 1.")
+                .LessThanOrEqualTo(50)
+                .WithMessage("Page size must not exceed 50.");
         }
     }
 }
