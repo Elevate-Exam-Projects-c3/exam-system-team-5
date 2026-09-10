@@ -9,6 +9,7 @@ namespace exam_system.Features.Quizzes.AdminCreateQuiz.Handlers
     {
         public async Task<RequestResponse<bool>> Handle(CreateQuizCommand request, CancellationToken cancellationToken=default)
         {
+            //chick if this diploma exist or not
 
             // then call the handler to create the quiz
             var result = await mediator.Send(request, cancellationToken);

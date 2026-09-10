@@ -7,7 +7,7 @@ using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Handlers
 {
-    public class UpdateQuizCommandHandler : IRequestHandler<UpdateQuizCommand, RequestResponse<QuizResponseDto>>
+    public class UpdateQuizCommandHandler : IRequestHandler<UpdateQuizCommand, RequestResponse<bool>>
     {
         private readonly IGenericRepository<Quiz> quizRepository;
 
@@ -16,13 +16,13 @@ namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Handlers
             this.quizRepository = quizRepository;
         }
 
-        public async Task<RequestResponse<QuizResponseDto>> Handle(UpdateQuizCommand request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<bool>> Handle(UpdateQuizCommand request, CancellationToken cancellationToken)
         {
             // load existing entity
             var quiz = await quizRepository.GetByIdAsync(request.QuizId);
             if (quiz == null)
             {
-                return RequestResponse<QuizResponseDto>.Fail("Quiz not found", 404);
+                return RequestResponse<bool>.Fail("Quiz not found", 404);
             }
 
             var dto = request.Dto;
@@ -36,16 +36,7 @@ namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Handlers
 
             await quizRepository.UpdateAsync(quiz);
 
-            return RequestResponse<QuizResponseDto>.Created(new QuizResponseDto
-            {
-                Title = quiz.Title,
-                Instructions = quiz.Instructions,
-                DurationMinutes = quiz.DurationMinutes,
-                StartDate = quiz.StartDate,
-                EndDate = quiz.EndDate,
-                PassScore = quiz.PassScore,
-                MaxAttempts = quiz.MaxAttempts
-            },"Quiz updated successfully");
+            return RequestResponse<bool>.Created(true, "Quiz updated successfully");
         }
     }
 }

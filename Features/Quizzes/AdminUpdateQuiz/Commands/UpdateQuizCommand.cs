@@ -6,6 +6,6 @@ using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Commands
 {
-    public record UpdateQuizCommand(Guid QuizId, UpdateQuizRequestDto Dto) : IRequest<RequestResponse<QuizResponseDto>>;
+    public record UpdateQuizCommand(Guid QuizId, UpdateQuizRequestDto Dto) : IRequest<RequestResponse<bool>>;
 
 }
