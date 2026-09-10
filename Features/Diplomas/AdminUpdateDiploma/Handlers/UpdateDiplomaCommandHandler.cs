@@ -22,7 +22,7 @@ namespace exam_system.Features.Diplomas.AdminUpdateDiploma.Handlers
         {
             //isexists query
             var diplomaExists = await _mediator.Send(new DiplomaExistsQuery(command.Id));
-            if (!diplomaExists.Data)
+            if (diplomaExists.Data != true)
                 return RequestResponse<Unit>.Fail("Diploma not found.", 404);
 
             await _diplomaRepository.UpdateAsync(
