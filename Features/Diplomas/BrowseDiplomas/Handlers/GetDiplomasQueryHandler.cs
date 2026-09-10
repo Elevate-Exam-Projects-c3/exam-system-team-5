@@ -22,6 +22,10 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Handlers
             _quizRepository = quizRepository;
         }
 
+        // Perf fix: replaced correlated subqueries (Count() per row in projection) with 
+        // separate GroupBy query on Quizzes, scoped to the current page's DiplomaIds.
+        // This avoids re-scanning Quizzes per diploma row and computing TotalQuizzes twice.
+
         public async Task<RequestResponse<PaginatedResult<DiplomaItemsResponseDto>>> Handle(GetDiplomasQuery request, CancellationToken cancellationToken)
         {
             var query = _diplomaRepository.Get(d => d.Quizzes.Any(q => q.Status == QuizStatus.Published));
@@ -49,8 +53,7 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Handlers
                     TotalQuizzes = g.Count(),
                     CompletedQuizzesCount = g.Count(q => q.Attempts.Any(a => a.StudentId == request.StudentId
                         && (a.Status == AttemptStatus.Submitted || a.Status == AttemptStatus.TimedOut)))
-                })
-                .ToListAsync(cancellationToken);
+                }).ToListAsync(cancellationToken);
 
             var diplomasResponseItems = pagedDiplomas
                 .Select(d =>
@@ -62,8 +65,7 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Handlers
                         d.Description,
                         stats.CompletedQuizzesCount,
                         stats.TotalQuizzes);
-                })
-                .ToList();
+                }).ToList();
 
             var diplomaList = new PaginatedResult<DiplomaItemsResponseDto>(diplomasResponseItems, diplomaCount, request.PageIndex, request.PageSize);
 
