@@ -3,7 +3,6 @@ using exam_system.Features.Common.Diplomas.DiplomaExists.Query;
 using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace exam_system.Features.Common.Diplomas.DiplomaExists.Handler
 {
