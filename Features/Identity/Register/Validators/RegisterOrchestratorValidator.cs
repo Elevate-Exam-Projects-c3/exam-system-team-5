@@ -1,11 +1,11 @@
-﻿using exam_system.Features.Identity.Register.Commands;
+﻿using exam_system.Features.Identity.Register.Orchestrators;
 using FluentValidation;
 
 namespace exam_system.Features.Identity.Register.Validators
 {
-    public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+    public class RegisterOrchestratorValidator : AbstractValidator<RegisterOrchestrator>
     {
-        public RegisterCommandValidator()
+        public RegisterOrchestratorValidator()
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
             RuleFor(x => x.FullName)

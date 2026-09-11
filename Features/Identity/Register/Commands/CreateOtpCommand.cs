@@ -3,8 +3,7 @@ using MediatR;
 
 namespace exam_system.Features.Identity.Register.Commands
 {
-    public record RegisterCommand(
-        Guid UserId,string FullName, 
+    public record CreateOtpCommand(Guid UserId,
         string Email,
-        string Password):IRequest<Result>;
+        string FullName):IRequest<Result>;
 }
