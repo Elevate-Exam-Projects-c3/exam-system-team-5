@@ -1,9 +1,8 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using exam_system.Domain.Common;
 using exam_system.Persistence.Context;
-
+using Microsoft.EntityFrameworkCore.Query;
 namespace exam_system.Persistence.DataAccess;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
@@ -31,16 +30,19 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
 
     public IQueryable<T> GetAll()
     {
-        return _dbSet;
+        //add AsNoTracking
+        return _dbSet.AsNoTracking().Where(e => !e.IsDeleted);
     }
 
     public IQueryable<T> Get(Expression<Func<T, bool>> predicate)
     {
-        return _dbSet.Where(predicate);
+        //add AsNoTracking
+        return GetAll().Where(predicate);
     }
 
     public async Task AddAsync(T entity)
     {
+        entity.CreatedAt = DateTime.UtcNow;
         await _dbSet.AddAsync(entity);
     }
 
@@ -54,7 +56,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         _dbSet.Update(entity);
     }
 
- 
+
     // Soft Delete - marks as deleted but keeps in database
     public void Delete(T entity)
     {
@@ -101,4 +103,43 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseEntity
         Delete(entity); // Use soft delete
         return Task.CompletedTask;
     }
+
+    public void Add(T entity)
+    {
+        entity.CreatedAt = DateTime.UtcNow;
+        _dbSet.Add(entity);
+    }
+
+    //isExist
+    public Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
+    {
+        return Get(predicate).AnyAsync(cancellationToken);
+    }
+    //soft Detate
+    public Task<int> DeleteAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return UpdateAsync(
+            e => e.Id == id,
+            setters => setters
+                .SetProperty(e => e.IsDeleted, true)
+                .SetProperty(e => e.DeletedAt, DateTime.UtcNow),
+            cancellationToken);
+
+    }
+    //Update in Database
+    public Task<int> UpdateAsync(
+        Expression<Func<T, bool>> predicate,
+        Action<UpdateSettersBuilder<T>> setters,
+        CancellationToken cancellationToken = default)
+    {
+        return Get(predicate).ExecuteUpdateAsync(
+            s =>
+            {
+                setters(s);                                        
+                s.SetProperty(e => e.UpdatedAt, DateTime.UtcNow);  
+            },
+            cancellationToken);
+    }
+
 }
+
