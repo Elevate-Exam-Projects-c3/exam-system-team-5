@@ -1,5 +1,7 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Diplomas;
+using exam_system.Features;
+using exam_system.Infrastructure;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
@@ -7,15 +9,18 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opt =>
+opt.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+// Add services from different layers
 builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddFeatureServices();
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
 
 //validation on Request
@@ -59,30 +64,10 @@ app.UseHttpsRedirection();
 app.UseMiddleware<TransactionMiddleware>();
 app.UseAuthorization();
 
-// Test Minimal API Endpoint to verify database access and generic repository
-//app.MapGet("/api/test/diplomas", async (IGenericRepository<Diploma> diplomaRepo, CancellationToken ct) =>
-//{
-//    var diplomas = await diplomaRepo.GetAll()
-//        .Select(d => new
-//        {
-//            d.Id,
-//            d.Title,
-//            d.Description,
-//            QuizzesCount = d.Quizzes.Count,
-//            EnrollmentsCount = d.Enrollments.Count,
-//            d.CreatedAt
-//        })
-//        .ToListAsync(ct);
 
-//    return Results.Ok(new
-//    {
-//        Success = true,
-//        Count = diplomas.Count,
-//        Data = diplomas
-//    });
-//})
-//.WithName("GetTestDiplomas")
-//.WithTags("Test");
+app.UseMiddleware<TransactionMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 
 app.MapControllers();
 
