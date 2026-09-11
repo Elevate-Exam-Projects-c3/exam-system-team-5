@@ -20,14 +20,14 @@ namespace exam_system.Features.Quizzes.AdminCreateQuiz.Handlers
         {
             var quiz = new Quiz             
             {
-                Title = request.Dto.Title,
+                Title = request.Title,
                 DiplomaId = request.DiplomaID,
-                Instructions = request.Dto.Instructions,
-                DurationMinutes = request.Dto.DurationMinutes,
-                StartDate = request.Dto.StartDate,
-                EndDate = request.Dto.EndDate,
-                PassScore = request.Dto.PassScore,
-                MaxAttempts = request.Dto.MaxAttempts,
+                Instructions = request.Instructions,
+                DurationMinutes = request.DurationMinutes,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                PassScore = request.PassScore,
+                MaxAttempts = request.MaxAttempts,
             };
 
             await _quizRepository.AddAsync(quiz);

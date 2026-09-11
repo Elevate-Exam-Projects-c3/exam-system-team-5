@@ -25,14 +25,13 @@ namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Handlers
                 return RequestResponse<bool>.Fail("Quiz not found", 404);
             }
 
-            var dto = request.Dto;
-            quiz.Title = dto.Title;
-            quiz.Instructions = dto.Instructions;
-            quiz.DurationMinutes = dto.DurationMinutes;
-            quiz.StartDate = dto.StartDate;
-            quiz.EndDate = dto.EndDate;
-            quiz.PassScore = dto.PassScore;
-            quiz.MaxAttempts = dto.MaxAttempts;
+            quiz.Title = request.Title;
+            quiz.Instructions = request.Instructions;
+            quiz.DurationMinutes = request.DurationMinutes;
+            quiz.StartDate = request.StartDate;
+            quiz.EndDate = request.EndDate;
+            quiz.PassScore = request.PassScore;
+            quiz.MaxAttempts = request.MaxAttempts;
 
             await quizRepository.UpdateAsync(quiz);
 

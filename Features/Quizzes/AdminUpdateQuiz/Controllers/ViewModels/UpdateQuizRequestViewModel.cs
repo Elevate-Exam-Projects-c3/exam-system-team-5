@@ -7,8 +7,8 @@
         int DurationMinutes,
         DateTime StartDate,
         DateTime EndDate,
-        int PassScore = 60,
-        int? MaxAttempts = null
+        int? MaxAttempts = null,
+        int PassScore = 60
     );
  
 }

@@ -20,25 +20,18 @@ namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers
     {
         
         [HttpPut]
-        public async Task<IActionResult> Update
-            (
-            [FromRoute] Guid QuizId,
-            [FromBody] UpdateQuizRequestViewModel viewModel, 
-            CancellationToken cancellationToken = default
-            )
+        public async Task<IActionResult> Update([FromRoute] Guid QuizId,[FromBody] UpdateQuizRequestViewModel viewModel, CancellationToken cancellationToken = default)
         {
-            // Map the view model to the DTO
-            var dto = new UpdateQuizRequestDto(
-                Title: viewModel.Title,
-                Instructions: viewModel.Instructions,
-                DurationMinutes: viewModel.DurationMinutes,
-                StartDate: viewModel.StartDate,
-                EndDate: viewModel.EndDate,
-                PassScore: viewModel.PassScore,
-                MaxAttempts: viewModel.MaxAttempts
-            );
-
-            var result = await mediator.Send(new UpdateQuizCommand(QuizId, dto), cancellationToken);
+          
+            var result = await mediator.Send(new UpdateQuizCommand(
+                QuizId,
+                viewModel.Title,
+                viewModel.Instructions,
+                viewModel.DurationMinutes,
+                viewModel.StartDate,
+                viewModel.EndDate,
+                viewModel.MaxAttempts,
+                viewModel.PassScore ), cancellationToken);
 
             var response = EndpointResponse<bool>.FromResult(result);
             return StatusCode(response.StatusCode, response);

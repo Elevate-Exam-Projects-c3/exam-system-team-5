@@ -6,6 +6,14 @@ using MediatR;
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Orchestrators
 {
     
-    public record CreateQuizOrchestrator(CreateQuizCommand CreateQuizCommand) : IRequest<RequestResponse<bool>>;
+    public record CreateQuizOrchestrator(
+        Guid DiplomaID,
+        string Title,
+        string? Instructions,
+        int DurationMinutes,
+        DateTime StartDate,
+        DateTime EndDate,
+        int PassScore,
+        int? MaxAttempts) : IRequest<RequestResponse<bool>>;
 
 }

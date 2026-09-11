@@ -1,9 +1,10 @@
-﻿using exam_system.Features.Quizzes.AdminCreateQuiz.DTOS;
+﻿using exam_system.Features.Quizzes.AdminCreateQuiz.Controllers.ViewModels;
+using exam_system.Features.Quizzes.AdminCreateQuiz.DTOS;
 using FluentValidation;
 
 namespace exam_system.Features.Quizzes.AdminCreateQuiz.Validators
 {
-    public class CreateQuizValidator:AbstractValidator<CreateQuizRequestDto>
+    public class CreateQuizValidator:AbstractValidator<CreateQuizRequestViewModel>
     {
         public CreateQuizValidator()
         {
