@@ -1,6 +1,5 @@
 ﻿using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Controllers.ViewModels;
-using exam_system.Features.Quizzes.AdminCreateQuiz.DTOS;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Handlers;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Orchestrators;
 using exam_system.Features.Shared;
@@ -23,7 +22,7 @@ namespace exam_system.Features.Quizzes.AdminCreateQuiz.Controllers
                 viewModel.Instructions,
                 viewModel.Title,
                 viewModel.DurationMinutes,
-                viewModel.StartDate,
+                viewModel.StartDate,    
                 viewModel.EndDate,
                 viewModel.PassScore,
                 viewModel.MaxAttempts), cancellationToken);

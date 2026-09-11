@@ -1,9 +1,7 @@
 ﻿using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
-using exam_system.Features.Quizzes.AdminCreateQuiz.DTOS;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Orchestrators;
 using exam_system.Features.Quizzes.AdminUpdateQuiz.Commands;
 using exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers.ViewModels;
-using exam_system.Features.Quizzes.AdminUpdateQuiz.DTOs;
 using exam_system.Features.Quizzes.AdminUpdateQuiz.Handlers;
 using exam_system.Features.Shared;
 using exam_system.Features.Shared.DTOs;
