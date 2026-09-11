@@ -1,7 +1,6 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Diplomas;
 using exam_system.Features;
-using exam_system.Infrastructure;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
@@ -19,7 +18,6 @@ builder.Services.AddSwaggerGen();
 // Add services from different layers
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddFeatureServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
 
