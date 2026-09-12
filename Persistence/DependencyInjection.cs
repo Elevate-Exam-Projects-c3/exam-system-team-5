@@ -1,6 +1,8 @@
 using exam_system.Common.Middleware;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Mapster;
 using MapsterMapper;
 using MediatR;
@@ -25,7 +27,6 @@ public static class DependencyInjection
         services.AddScoped<TransactionMiddleware>();
 
         //services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
@@ -37,6 +38,16 @@ public static class DependencyInjection
         mappingConfig.Scan(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IMapper>(new Mapper(mappingConfig));
+        return services;
+    }
+
+    public static IServiceCollection AddFluentValidationConfig(
+    this IServiceCollection services)
+    {
+        services.AddFluentValidationAutoValidation();
+
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
         return services;
     }
 }
