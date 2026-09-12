@@ -1,7 +1,4 @@
-﻿using exam_system.Features.Quizzes.AdminCreateQuiz.DTOS;
-using exam_system.Features.Quizzes.AdminUpdateQuiz.DTOs;
-using exam_system.Features.Shared;
-using exam_system.Features.Shared.DTOs;
+﻿using exam_system.Features.Shared;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Commands

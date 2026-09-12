@@ -4,14 +4,16 @@ using MediatR;
 
 namespace exam_system.Common.Behaviors
 {
-    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+    public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        where TRequest : IRequest<TResponse> 
     {
         private readonly IEnumerable<IValidator<TRequest>> _validators;
 
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>>validators)
+        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
         {
             _validators = validators;
         }
+
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             if (!_validators.Any())
@@ -33,7 +35,12 @@ namespace exam_system.Common.Behaviors
             {
                 var errorMessage = string.Join(" | ", failures.Select(f => f.ErrorMessage));
 
-                return (TResponse)Convert.ChangeType(Result.Failure(errorMessage), typeof(TResponse));
+                if (typeof(TResponse) == typeof(Result))
+                {
+                    return (TResponse)(object)Result.Failure(errorMessage);
+                }
+
+                throw new ValidationException(failures);
             }
 
             return await next();

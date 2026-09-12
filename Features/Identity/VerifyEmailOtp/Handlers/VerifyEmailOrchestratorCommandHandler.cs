@@ -30,6 +30,7 @@ namespace exam_system.Features.Identity.VerifyEmailOtp.Handlers
                 await _mediator.Send(new RecoredFailedOtpAttemptCommand(otpData.OtpId), cancellationToken);
                 return Result.Failure("Invalid Otp Code");
             }
+            await _mediator.Send(new UpdateOtpStatusToUsedCommand(otpData.OtpId), cancellationToken);
             await _mediator.Send(new ActivateUserAccountCommand(otpData.UserId, otpData.OtpId), cancellationToken);
             return Result.Success();
         }

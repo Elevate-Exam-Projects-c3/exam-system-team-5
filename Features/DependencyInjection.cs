@@ -2,6 +2,7 @@
 using exam_system.Infrastructure.Services;
 using exam_system.Infrastructure.Settings;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using MimeKit;
 using System.Reflection;
@@ -26,9 +27,12 @@ namespace exam_system.Features
             services.AddHostedService<EmailBackgroundService>();
 
             services.AddMediatR(Assembly.GetExecutingAssembly());
+
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddFluentValidationAutoValidation();
+
 
             return services;
         }

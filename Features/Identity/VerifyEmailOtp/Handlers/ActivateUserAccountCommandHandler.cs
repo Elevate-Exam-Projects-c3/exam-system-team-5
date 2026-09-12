@@ -6,29 +6,22 @@ using MediatR;
 
 namespace exam_system.Features.Identity.VerifyEmailOtp.Handlers
 {
-    public class ActivateUserAccountCommandHandler : IRequestHandler<ActivateUserAccountCommand>
+    public class ActivateUserAccountCommandHandler : IRequestHandler<ActivateUserAccountCommand, Unit>
     {
         private readonly IGenericRepository<ApplicationUser> _userRepo;
-        private readonly IGenericRepository<EmailVerificationOtp> _otpRepo;
-
         public ActivateUserAccountCommandHandler(IGenericRepository<ApplicationUser> userRepo,
             IGenericRepository<EmailVerificationOtp> otpRepo)
-        {
-            _userRepo = userRepo;
-            _otpRepo = otpRepo;
-        }
-        public async Task Handle(ActivateUserAccountCommand request, CancellationToken cancellationToken)
+        => _userRepo = userRepo;
+        public async Task<Unit> Handle(ActivateUserAccountCommand request, CancellationToken cancellationToken)
         {
             var user = await _userRepo.GetByIdAsync(request.UserId);
-            var otp = await _otpRepo.GetByIdAsync(request.OtpId);
-            if(user !=null && otp !=null)
+            if (user != null)
             {
                 user.AccountStatus = AccountStatus.Active;
                 user.EmailConfirmed = true;
-                otp.IsUsed = true;
                 _userRepo.Update(user);
-                _otpRepo.Update(otp);
             }
+            return Unit.Value;
 
         }
     }
