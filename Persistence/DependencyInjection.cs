@@ -20,8 +20,11 @@ public static class DependencyInjection
 
         services.AddMediatR(typeof(Program));
 
-
+        //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SaveChangesBehavior<,>));
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+        services.AddScoped<TransactionMiddleware>();
+
+        //services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
