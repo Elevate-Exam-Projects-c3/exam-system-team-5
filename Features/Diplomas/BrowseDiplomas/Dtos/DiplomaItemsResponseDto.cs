@@ -1,9 +1,9 @@
 ﻿namespace exam_system.Features.Diplomas.BrowseDiplomas.Dtos
 {
-    public record DiplomaItemsResponse(
+    public record DiplomaItemsResponseDto(
     Guid Id,
     string Title,
     string? Description,
-    int StudentProgressPercentage,
+    int StudentCompletedQuizzesCount,
     int TotalQuizzes);
 }

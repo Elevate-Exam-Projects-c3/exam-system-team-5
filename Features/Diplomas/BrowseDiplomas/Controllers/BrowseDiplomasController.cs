@@ -41,17 +41,18 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Controllers
                 var failResponse = EndpointResponse<PaginatedResult<DiplomaItemsResponseViewModel>>
                     .FromResult(RequestResponse<PaginatedResult<DiplomaItemsResponseViewModel>>
                         .Fail(getDiplomasQueryResult.Message, getDiplomasQueryResult.StatusCode));
-                return Ok(failResponse);
+
+                return StatusCode(getDiplomasQueryResult.StatusCode,failResponse);
             }
 
-            // Map using Mapster - properties have same names, no configuration needed!
+            // Map using Mapster - properties have same names, no configuration needed.
             var diplomasData = getDiplomasQueryResult.Data.Adapt<PaginatedResult<DiplomaItemsResponseViewModel>>();
 
-            var response = EndpointResponse<PaginatedResult<DiplomaItemsResponseViewModel>>
+            var diplomasDataResponse = EndpointResponse<PaginatedResult<DiplomaItemsResponseViewModel>>
                 .FromResult(RequestResponse<PaginatedResult<DiplomaItemsResponseViewModel>>
                     .Ok(diplomasData));
 
-            return Ok(response);
+            return StatusCode(diplomasDataResponse.StatusCode , diplomasDataResponse);
         }
 
     }

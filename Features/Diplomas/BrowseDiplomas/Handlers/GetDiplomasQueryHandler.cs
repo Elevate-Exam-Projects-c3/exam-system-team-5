@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace exam_system.Features.Diplomas.BrowseDiplomas.Handlers
 {
 
-    public class GetDiplomasQueryHandler : IRequestHandler<GetDiplomasQuery, RequestResponse<PaginatedResult<DiplomaItemsResponse>>>
+    public class GetDiplomasQueryHandler : IRequestHandler<GetDiplomasQuery, RequestResponse<PaginatedResult<DiplomaItemsResponseDto>>>
     {
         private readonly IGenericRepository<Diploma> _diplomaRepository;
 
@@ -19,19 +19,20 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Handlers
             _diplomaRepository = diplomaRepository;
         }
 
-        public async Task<RequestResponse<PaginatedResult<DiplomaItemsResponse>>> Handle(GetDiplomasQuery request, CancellationToken cancellationToken)
+        public async Task<RequestResponse<PaginatedResult<DiplomaItemsResponseDto>>> Handle(GetDiplomasQuery request, CancellationToken cancellationToken)
         {
+            var query = _diplomaRepository.Get(d => d.Quizzes.Any(q =>q.Status == QuizStatus.Published));
             // count of published diplomas
-            var diplomaCount = await _diplomaRepository.CountAsync(a => a.Quizzes.Any(q => q.Status == QuizStatus.Published));
+            var diplomaCount = await query.CountAsync(cancellationToken);
 
 
             // return studentprogress number of enterd quizes inthis diploma that enrolled on it
             // calculate the quiz status with submitte and timeout based on userstory EXAM-21
-            var diplomasResponseItems = await _diplomaRepository.Get(a => a.Quizzes.Any(q => q.Status == QuizStatus.Published))
+            var diplomasResponseItems = await query
+                .OrderBy(d => d.Title)
                 .Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .OrderBy(d => d.Title)
-                .Select(d => new DiplomaItemsResponse(
+                .Select(d => new DiplomaItemsResponseDto(
                 d.Id,
                 d.Title,
                 d.Description,
@@ -40,10 +41,9 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Handlers
                 d.Quizzes.Count(q => q.Status == QuizStatus.Published)))
                 .ToListAsync(cancellationToken);
 
-            var diplomaList = new PaginatedResult<DiplomaItemsResponse>(diplomasResponseItems, diplomaCount, request.PageIndex, request.PageSize);
+            var diplomaList = new PaginatedResult<DiplomaItemsResponseDto>(diplomasResponseItems, diplomaCount, request.PageIndex, request.PageSize);
 
-            return RequestResponse<PaginatedResult<DiplomaItemsResponse>>.Ok(diplomaList);
-
+            return RequestResponse<PaginatedResult<DiplomaItemsResponseDto>>.Ok(diplomaList);
 
         }
     }
