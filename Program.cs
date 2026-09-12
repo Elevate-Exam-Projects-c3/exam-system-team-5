@@ -1,13 +1,10 @@
 using exam_system.Common.Middleware;
-using exam_system.Domain.Entities.Diplomas;
 using exam_system.Features;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
-using exam_system.Persistence.DataAccess;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +17,6 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddFeatureServices();
 builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
-
-//validation on Request
-builder.Services.AddFluentValidationAutoValidation();
-
-builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-
 
 var app = builder.Build();
 
@@ -62,8 +53,6 @@ app.UseHttpsRedirection();
 app.UseMiddleware<TransactionMiddleware>();
 app.UseAuthorization();
 
-
-app.UseMiddleware<TransactionMiddleware>();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 

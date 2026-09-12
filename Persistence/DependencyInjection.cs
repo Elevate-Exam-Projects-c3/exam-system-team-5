@@ -12,8 +12,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("ExaminationConnection")
-            ?? "Server=(localdb)\\mssqllocaldb;Database=ExaminationSystem_Team5_Db;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False";
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+            //?? "Server=(localdb)\\mssqllocaldb;Database=ExaminationSystem_Team5_Db;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False";
 
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(connectionString));

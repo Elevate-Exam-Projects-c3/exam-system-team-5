@@ -1,5 +1,4 @@
 ﻿using exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers.ViewModels;
-using exam_system.Features.Quizzes.AdminUpdateQuiz.DTOs;
 using FluentValidation;
 
 namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Validators
