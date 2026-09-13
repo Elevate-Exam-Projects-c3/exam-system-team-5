@@ -1,4 +1,5 @@
 ﻿using exam_system.Features.Diplomas.AdminDeleteDiploma.Commands;
+using exam_system.Features.Diplomas.AdminDeleteDiploma.Orchestrators;
 using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,7 @@ namespace exam_system.Features.Diplomas.AdminDeleteDiploma.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new DeleteDiplomaCommand(id), cancellationToken);
+            var result = await _mediator.Send(new DeleteDiplomaOrchestrator(id), cancellationToken);
             var response = EndpointResponse<RequestResponse<Unit>>.FromResult(RequestResponse<RequestResponse<Unit>>.Ok(result));
             return StatusCode(response.StatusCode, response);
         }
