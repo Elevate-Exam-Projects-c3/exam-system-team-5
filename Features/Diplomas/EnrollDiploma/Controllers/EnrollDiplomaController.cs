@@ -1,4 +1,5 @@
 ﻿using exam_system.Features.Diplomas.EnrollDiploma.Commands;
+using exam_system.Features.Diplomas.EnrollDiploma.Orchestrators;
 using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -24,7 +25,7 @@ namespace exam_system.Features.Diplomas.EnrollDiploma.Controllers
             //test
             Guid studentId = new Guid("aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa");
 
-            var result = await _mediator.Send(new EnrollInDiplomaCommand(studentId, diplomaId), cancellationToken);
+            var result = await _mediator.Send(new EnrollInDiplomaOrchestrator(studentId, diplomaId), cancellationToken);
             var response = EndpointResponse<Unit>.FromResult(result);
             return StatusCode(response.StatusCode, response);
         }
