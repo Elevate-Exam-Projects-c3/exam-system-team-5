@@ -19,7 +19,7 @@ builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 // Seed Database automatically on startup
 using (var scope = app.Services.CreateScope())
 {
