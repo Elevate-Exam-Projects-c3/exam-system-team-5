@@ -20,7 +20,7 @@ builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
-
+app.UseMiddleware<ExceptionMiddleware>();
 // Seed Database automatically on startup
 using (var scope = app.Services.CreateScope())
 {
