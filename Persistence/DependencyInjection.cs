@@ -1,3 +1,4 @@
+using exam_system.Common.Behaviors;
 using exam_system.Common.Middleware;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
@@ -12,7 +13,9 @@ using System.Reflection;
 namespace exam_system.Persistence;
 public static class DependencyInjection
 {
-    public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPersistenceServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
             //?? "Server=(localdb)\\mssqllocaldb;Database=ExaminationSystem_Team5_Db;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False";
