@@ -2,9 +2,7 @@ using exam_system.Common.Middleware;
 using exam_system.Features;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using System.Reflection;
+using exam_system.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +13,7 @@ builder.Services.AddSwaggerGen();
 // Add services from different layers
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddFeatureServices();
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
 
