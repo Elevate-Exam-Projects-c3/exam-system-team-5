@@ -1,5 +1,10 @@
 using exam_system.Common.Middleware;
+<<<<<<< HEAD
 using exam_system.Features;
+=======
+using exam_system.Domain.Entities.Diplomas;
+using exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos;
+>>>>>>> 9d609d3 (publish and unpublish)
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using FluentValidation;
@@ -7,6 +12,7 @@ using FluentValidation.AspNetCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+MapsterConfig.RegisterMappings();
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
 opt.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
