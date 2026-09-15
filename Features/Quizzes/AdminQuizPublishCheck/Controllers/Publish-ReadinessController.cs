@@ -1,6 +1,7 @@
 ﻿using exam_system.Features.Quizzes.AdminQuizPublishCheck.Orchestrators;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.ViewModels;
+using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,9 +34,9 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Controllers
 
             var model = new QuizReadinessViewModel
             {
-                QuizId = result.QuizId,
-                IsReady = result.IsReady,
-                Checks = result.Checks
+                QuizId = result.Data!.QuizId,
+                IsReady = result.Data.IsReady,
+                Checks = result.Data.Checks
                     .Select(check => new ReadinessCheckViewModel
                     {
                         Name = check.Name,
@@ -45,7 +46,16 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Controllers
                     .ToList()
             };
 
-            return Ok(model);
+            return StatusCode(
+                result.StatusCode,
+                new EndpointResponse<QuizReadinessViewModel>(
+                    result.Success,
+                    result.StatusCode,
+                    result.Message,
+                    model,
+                    result.Errors
+                )
+            );
         }
 
 

@@ -1,6 +1,9 @@
-﻿using exam_system.Features.Quizzes.AdminManageQuestions.Commands;
+﻿using exam_system.Common.Results;
+using exam_system.Features.Quizzes.AdminManageQuestions.Commands;
 using exam_system.Features.Quizzes.AdminManageQuestions.Dtos;
+using exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators;
 using exam_system.Features.Quizzes.AdminManageQuestions.ViewModels;
+using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,26 +26,28 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Controllers
         [HttpPost]
         [Route("api/quizzes/questions")]
         public async Task<IActionResult> AddQuestion(
-        [FromBody] AddQuestionViewModel model,
-        CancellationToken cancellationToken)
-            {
-                await _mediator.Send(
-                    new AddQuestionOrchestrator(
-                        model.QuizId,
-                        model.Text,
-                        model.Explanation,
-                        model.OrderIndex,
-                        model.Options.Select(option =>
-                            new AddQuestionOrchestrator.AddOption(
-                                option.OptionText,
-                                option.IsCorrect
-                            )).ToList()
-                    ),
-                    cancellationToken);
+            [FromBody] AddQuestionViewModel model,
+            CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(
+                new AddQuestionOrchestrator(
+                    model.QuizId,
+                    model.Text,
+                    model.Explanation,
+                    model.OrderIndex,
+                    model.Options.Select(option =>
+                        new AddQuestionOrchestrator.AddOption(
+                            option.OptionText,
+                            option.IsCorrect
+                        )).ToList()
+                ),
+                cancellationToken);
 
-                return Ok();
+            return StatusCode(
+                result.StatusCode,
+                EndpointResponse<Unit>.FromResult(result)
+            );
         }
-
 
 
 
@@ -51,11 +56,11 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Controllers
         [HttpPut]
         [Route("api/quizzes/questions/{questionId}")]
         public async Task<IActionResult> UpdateQuestion(
-    Guid questionId,
-    [FromBody] UpdateQuestionViewModel model,
-    CancellationToken cancellationToken)
+            Guid questionId,
+            [FromBody] UpdateQuestionViewModel model,
+            CancellationToken cancellationToken)
         {
-            await _mediator.Send(
+            var result = await _mediator.Send(
                 new UpdateQuestionOrchestrator(
                     questionId,
                     model.Text,
@@ -69,24 +74,28 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Controllers
                 ),
                 cancellationToken);
 
-            return Ok();
+            return StatusCode(
+                result.StatusCode,
+                EndpointResponse<Unit>.FromResult(result)
+            );
         }
-
 
 
         [HttpDelete]
         [Route("api/quizzes/questions/{questionId}")]
         public async Task<IActionResult> DeleteQuestion(
-    Guid questionId,
-    CancellationToken cancellationToken)
+            Guid questionId,
+            CancellationToken cancellationToken)
         {
-            await _mediator.Send(
+            var result = await _mediator.Send(
                 new DeleteQuestionCommand(questionId),
                 cancellationToken);
 
-            return Ok();
+            return StatusCode(
+                result.StatusCode,
+                EndpointResponse<Unit>.FromResult(result)
+            );
         }
-
 
 
 

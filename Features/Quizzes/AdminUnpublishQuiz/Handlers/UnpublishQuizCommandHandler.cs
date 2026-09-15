@@ -2,13 +2,14 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminUnpublishQuiz.Commands;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
 {
     public class UnpublishQuizCommandHandler
-        : IRequestHandler<UnpublishQuizCommand, Unit>
+        : IRequestHandler<UnpublishQuizCommand,RequestResponse<Unit>>
     {
         private readonly IGenericRepository<Quiz> _quizRepository;
 
@@ -18,7 +19,7 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
             _quizRepository = quizRepository;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             UnpublishQuizCommand request,
             CancellationToken cancellationToken)
         {
@@ -33,7 +34,7 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
 
             _quizRepository.Update(quiz);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(Unit.Value, "Quiz successfully unpublished.");
         }
     }
 }

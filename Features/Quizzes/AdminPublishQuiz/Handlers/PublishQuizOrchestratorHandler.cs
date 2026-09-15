@@ -4,13 +4,14 @@ using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminPublishQuiz.Commands;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Orchestrators;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminPublishQuiz.Handlers
 {
     public class PublishQuizOrchestratorHandler
-        : IRequestHandler<PublishQuizOrchestrator, Unit>
+        : IRequestHandler<PublishQuizOrchestrator, RequestResponse<Unit>>
     {
         private readonly IMediator _mediator;
 
@@ -19,7 +20,7 @@ namespace exam_system.Features.Quizzes.AdminPublishQuiz.Handlers
             _mediator = mediator;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             PublishQuizOrchestrator request,
             CancellationToken cancellationToken)
         {
@@ -27,11 +28,11 @@ namespace exam_system.Features.Quizzes.AdminPublishQuiz.Handlers
                 new QuizReadinessOrchestrator(request.QuizId),
                 cancellationToken);
 
-            if (!readiness.IsReady)
+            if (!readiness.Data.IsReady)
             {
                 var errors = string.Join(
                     " ",
-                    readiness.Checks
+                    readiness.Data.Checks
                         .Where(check => !check.Passed)
                         .Select(check => check.Message));
 
@@ -43,7 +44,7 @@ namespace exam_system.Features.Quizzes.AdminPublishQuiz.Handlers
                 new PublishQuizCommand(request.QuizId),
                 cancellationToken);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(Unit.Value, "Quiz published successfully");
         }
     }
 }

@@ -2,13 +2,14 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminPublishQuiz.Commands;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminPublishQuiz.Handlers
 {
     public class PublishQuizCommandHandler
-        : IRequestHandler<PublishQuizCommand, Unit>
+        : IRequestHandler<PublishQuizCommand, RequestResponse<Unit>>
     {
         private readonly IGenericRepository<Quiz> _quizRepository;
 
@@ -18,7 +19,7 @@ namespace exam_system.Features.Quizzes.AdminPublishQuiz.Handlers
             _quizRepository = quizRepository;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             PublishQuizCommand request,
             CancellationToken cancellationToken)
         {
@@ -33,7 +34,7 @@ namespace exam_system.Features.Quizzes.AdminPublishQuiz.Handlers
 
             _quizRepository.Update(quiz);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(Unit.Value, "Quiz published successfully");
         }
     }
 }

@@ -2,13 +2,14 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Attempts;
 using exam_system.Features.Quizzes.AdminUnpublishQuiz.Queries;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
 {
     public class CheckInProgressAttemptsQueryHandler
-        : IRequestHandler<CheckInProgressAttemptsQuery, Unit>
+        : IRequestHandler<CheckInProgressAttemptsQuery, RequestResponse<Unit>>
     {
         private readonly IGenericRepository<QuizAttempt> _attemptRepository;
 
@@ -18,7 +19,7 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
             _attemptRepository = attemptRepository;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             CheckInProgressAttemptsQuery request,
             CancellationToken cancellationToken)
         {
@@ -34,7 +35,7 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
                     "Cannot unpublish quiz while students have in-progress attempts.");
             }
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(Unit.Value, "No in-progress attempts found.");
         }
     }
 }

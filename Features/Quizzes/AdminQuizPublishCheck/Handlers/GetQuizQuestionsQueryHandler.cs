@@ -5,11 +5,12 @@ using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 using MapsterMapper;
+using exam_system.Features.Shared;
 
 namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
 {
     public class GetQuizQuestionsQueryHandler
-        : IRequestHandler<GetQuizQuestionsQuery, List<GetQuizQuestionsResponse>>
+        : IRequestHandler<GetQuizQuestionsQuery, RequestResponse<List<GetQuizQuestionsResponse>>>
     {
         private readonly IGenericRepository<Question> _questionRepository;
         private IMapper _mapper;
@@ -21,7 +22,7 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             _mapper = mapper;
         }
 
-        public async Task<List<GetQuizQuestionsResponse>> Handle(
+        public async Task<RequestResponse<List<GetQuizQuestionsResponse>>> Handle(
             GetQuizQuestionsQuery request,
             CancellationToken cancellationToken)
         {
@@ -29,9 +30,12 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
                 .Get(q => q.QuizId == request.QuizId && !q.IsDeleted)
                 .ToListAsync(cancellationToken);
 
-            return questions
-                .Select(q => _mapper.Map<GetQuizQuestionsResponse>(q))
-                .ToList();
+            return RequestResponse<List<GetQuizQuestionsResponse>>.Ok(
+                questions
+                    .Select(q => _mapper.Map<GetQuizQuestionsResponse>(q))
+                    .ToList(),
+                "Quiz questions retrieved successfully."
+            );
         }
     }
 }

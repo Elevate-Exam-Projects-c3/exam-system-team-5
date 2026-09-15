@@ -2,13 +2,14 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminManageQuestions.Commands;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
 {
     public class UpdateQuestionCommandHandler
-         : IRequestHandler<UpdateQuestionCommand, Unit>
+        : IRequestHandler<UpdateQuestionCommand, RequestResponse<Unit>>
     {
         private readonly IGenericRepository<Question> _questionRepository;
 
@@ -18,7 +19,7 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
             _questionRepository = questionRepository;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             UpdateQuestionCommand request,
             CancellationToken cancellationToken)
         {
@@ -31,7 +32,6 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
                     "Question not found.");
             }
 
-
             question.Text = request.Text;
             question.Explanation = request.Explanation;
             question.OrderIndex = request.OrderIndex;
@@ -39,7 +39,9 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
 
             _questionRepository.Update(question);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(
+                Unit.Value,
+                "Question updated successfully.");
         }
     }
 }

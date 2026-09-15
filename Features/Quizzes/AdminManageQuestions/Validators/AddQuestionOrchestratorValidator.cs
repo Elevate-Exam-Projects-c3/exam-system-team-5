@@ -1,4 +1,4 @@
-﻿using exam_system.Features.Quizzes.AdminManageQuestions.Commands;
+﻿using exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators;
 using FluentValidation;
 
 namespace exam_system.Features.Quizzes.AdminManageQuestions.Validators

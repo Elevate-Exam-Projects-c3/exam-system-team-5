@@ -2,6 +2,7 @@
 using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MapsterMapper;
 using MediatR;
@@ -9,7 +10,7 @@ using MediatR;
 namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
 {
     public class GetQuizByIdQueryHandler
-        : IRequestHandler<GetQuizByIdQuery, GetQuizByIdResponse>
+        : IRequestHandler<GetQuizByIdQuery, RequestResponse<GetQuizByIdResponse>>
     {
         private readonly IGenericRepository<Quiz> _quizRepository;
         private IMapper _mapper;
@@ -21,7 +22,7 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             _mapper = mapper;
         }
 
-        public async Task<GetQuizByIdResponse> Handle(
+        public async Task<RequestResponse<GetQuizByIdResponse>> Handle(
             GetQuizByIdQuery request,
             CancellationToken cancellationToken)
         {
@@ -34,7 +35,10 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
                     "Quiz not found.");
             }
 
-            return _mapper.Map<GetQuizByIdResponse>(quiz);
+            return RequestResponse<GetQuizByIdResponse>.Ok(
+                _mapper.Map<GetQuizByIdResponse>(quiz),
+                "Quiz retrieved successfully."
+            );
         }
     }
 }

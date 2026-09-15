@@ -17,20 +17,23 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
             _optionRepository = optionRepository;
         }
 
+
+
         public async Task<Unit> Handle(
             UpdateOptionsCommand request,
             CancellationToken cancellationToken)
         {
             IQueryable<QuestionOption> query =
-                _optionRepository.Get(x => x.QuestionId == request.QuestionId);
+                _optionRepository.Get(x =>
+                    x.QuestionId == request.QuestionId);
 
-            var oldOptions = await EntityFrameworkQueryableExtensions
-                .ToListAsync(query, cancellationToken);
-
-            foreach (var option in oldOptions)
-            {
-                _optionRepository.HardDelete(option);
-            }
+            await query
+                .Where(x => !x.IsDeleted)
+                .ExecuteUpdateAsync(setters => setters
+                    .SetProperty(x => x.IsDeleted, true)
+                    .SetProperty(x => x.DeletedAt, DateTime.UtcNow)
+                    .SetProperty(x => x.UpdatedAt, DateTime.UtcNow),
+                    cancellationToken);
 
             var newOptions = request.Options.Select(option =>
                 new QuestionOption

@@ -1,10 +1,12 @@
 ﻿using exam_system.Features.Quizzes.AdminManageQuestions.Commands;
+using exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators;
+using exam_system.Features.Shared;
 using MediatR;
 
-namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
+namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
 {
     public class UpdateQuestionOrchestratorHandler
-        : IRequestHandler<UpdateQuestionOrchestrator, Unit>
+        : IRequestHandler<UpdateQuestionOrchestrator, RequestResponse<Unit>>
     {
         private readonly IMediator _mediator;
 
@@ -13,7 +15,7 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
             _mediator = mediator;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             UpdateQuestionOrchestrator request,
             CancellationToken cancellationToken)
         {
@@ -38,7 +40,9 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
                     options),
                 cancellationToken);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(
+                Unit.Value,
+                "Question updated successfully.");
         }
     }
 }

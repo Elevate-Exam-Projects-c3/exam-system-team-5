@@ -1,4 +1,5 @@
 ﻿using exam_system.Features.Quizzes.AdminUnpublishQuiz.Orchestrators;
+using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,20 +17,21 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Controllers
             _mediator = mediator;
         }
 
-        [HttpPatch("/unpublish/{id}")]
-        public async Task<IActionResult> Unpublish(
-            Guid id,
-            CancellationToken cancellationToken)
-        {
-            await _mediator.Send(
-                new UnpublishQuizOrchestrator(id),
-                cancellationToken);
-
-            return Ok(new
+            [HttpPatch("/unpublish/{id}")]
+            public async Task<IActionResult> Unpublish(
+                Guid id,
+                CancellationToken cancellationToken)
             {
-                Success = true,
-                Message = "Quiz unpublished successfully."
-            });
+                var result = await _mediator.Send(
+                    new UnpublishQuizOrchestrator(id),
+                    cancellationToken);
+
+                return StatusCode(
+                    result.StatusCode,
+                    EndpointResponse<Unit>.FromResult(result)
+                );
+            }
         }
     }
-}
+
+
