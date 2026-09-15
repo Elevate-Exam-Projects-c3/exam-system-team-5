@@ -13,11 +13,12 @@ builder.Services.AddSwaggerGen();
 // Add services from different layers
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddFeatureServices();
-builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
+builder.Services.AddFluentValidationConfig();
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionMiddleware>();
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Seed Database automatically on startup
@@ -50,7 +51,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseMiddleware<TransactionMiddleware>();
 app.UseAuthorization();
 app.UseAuthorization();
 app.MapControllers();

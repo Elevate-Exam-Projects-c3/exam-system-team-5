@@ -11,7 +11,7 @@ namespace exam_system.Features.Quizzes.AdminCreateQuiz.Controllers
 {
     [ApiController]
     [Route("api/admin/quizzes/{diplomaId:guid}")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminCreateQuizController( IMediator mediator) : ControllerBase
     {
         [HttpPost]

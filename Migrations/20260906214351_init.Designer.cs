@@ -12,7 +12,7 @@ using exam_system.Persistence.Context;
 namespace exam_system.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260903172959_init")]
+    [Migration("20260906214351_init")]
     partial class init
     {
         /// <inheritdoc />
