@@ -1,13 +1,14 @@
 ﻿using exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Orchestrators;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
+using exam_system.Features.Shared;
 using MapsterMapper;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
 {
     public class QuizReadinessOrchestratorHandler
-        : IRequestHandler<QuizReadinessOrchestrator, QuizReadinessResponse>
+        : IRequestHandler<QuizReadinessOrchestrator, RequestResponse<QuizReadinessResponse>>
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
@@ -18,7 +19,7 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             _mapper = mapper;
         }
 
-        public async Task<QuizReadinessResponse> Handle(
+        public async Task<RequestResponse<QuizReadinessResponse>> Handle(
             QuizReadinessOrchestrator request,
             CancellationToken cancellationToken)
         {
@@ -30,7 +31,7 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
                 new GetQuizQuestionsQuery(request.QuizId),
                 cancellationToken);
 
-            var questionIds = questions
+            var questionIds = questions.Data
                 .Select(q => q.QuestionId)
                 .ToList();
 
@@ -41,7 +42,7 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             var checks = new List<ReadinessCheck>();
 
             // 1. At least one question
-            var hasQuestions = questions.Any();
+            var hasQuestions = questions.Data.Any();
 
             checks.Add(new ReadinessCheck
             {
@@ -54,8 +55,8 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
 
             // 2. Every question has exactly one correct option
             var everyQuestionHasOneCorrectOption =
-                questions.All(question =>
-                    options.Count(option =>
+                questions.Data.All(question =>
+                    options.Data.Count(option =>
                         option.QuestionId == question.QuestionId &&
                         option.IsCorrect) == 1);
 
@@ -69,7 +70,7 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             });
 
             // 3. Duration
-            var validDuration = quiz.DurationMinutes > 0;
+            var validDuration = quiz.Data.DurationMinutes > 0;
 
             checks.Add(new ReadinessCheck
             {
@@ -82,8 +83,8 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
 
             // 4. Pass Score
             var validPassScore =
-                quiz.PassScore >= 0 &&
-                quiz.PassScore <= 100;
+                quiz.Data.PassScore >= 0 &&
+                quiz.Data.PassScore <= 100;
 
             checks.Add(new ReadinessCheck
             {
@@ -94,12 +95,15 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
                     : "Pass score must be between 0 and 100."
             });
 
-            return new QuizReadinessResponse
-            {
-                QuizId = quiz.QuizId,
-                IsReady = checks.All(check => check.Passed),
-                Checks = checks
-            };
+            return RequestResponse<QuizReadinessResponse>.Ok(
+                new QuizReadinessResponse
+                {
+                    QuizId = quiz.Data.Id    ,
+                    IsReady = checks.All(check => check.Passed),
+                    Checks = checks
+                },
+                "Quiz readiness check completed."
+            ) ;
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using MediatR;
-using static exam_system.Features.Quizzes.AdminManageQuestions.Commands.AddQuestionOrchestrator;
+﻿using exam_system.Features.Shared;
+using MediatR;
+using static exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators.AddQuestionOrchestrator;
 
-namespace exam_system.Features.Quizzes.AdminManageQuestions.Commands
+namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
 {
     public record AddQuestionOrchestrator(
         Guid QuizId,
@@ -9,7 +10,7 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Commands
         string? Explanation,
         int OrderIndex,
         IReadOnlyCollection<AddOption> Options
-    ) : IRequest<Unit>
+    ) : IRequest<RequestResponse<Unit>>
     {
         public record AddOption(
             string OptionText,

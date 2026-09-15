@@ -2,13 +2,14 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminManageQuestions.Commands;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
 {
     public class DeleteQuestionCommandHandler
-        : IRequestHandler<DeleteQuestionCommand, Unit>
+        : IRequestHandler<DeleteQuestionCommand,RequestResponse<Unit>>
     {
         private readonly IGenericRepository<Question> _questionRepository;
 
@@ -18,7 +19,7 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
             _questionRepository = questionRepository;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             DeleteQuestionCommand request,
             CancellationToken cancellationToken)
         {
@@ -40,7 +41,7 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
 
             _questionRepository.Delete(question);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(Unit.Value, "Question deleted successfully.")   ;
         }
     }
 }

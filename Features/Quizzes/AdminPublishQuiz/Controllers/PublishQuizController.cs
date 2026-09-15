@@ -1,4 +1,5 @@
 ﻿using exam_system.Features.Quizzes.AdminPublishQuiz.Commands;
+using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,15 +22,14 @@ namespace exam_system.Features.Quizzes.AdminPublishQuiz.Controllers
             Guid id,
             CancellationToken cancellationToken)
         {
-            await _mediator.Send(
+            var result = await _mediator.Send(
                 new PublishQuizOrchestrator(id),
                 cancellationToken);
 
-            return Ok(new
-            {
-                Success = true,
-                Message = "Quiz published successfully."
-            });
+            return StatusCode(
+                result.StatusCode,
+                EndpointResponse<Unit>.FromResult(result)
+            );
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using exam_system.Features.Shared;
+using MediatR;
 
-using static exam_system.Features.Quizzes.AdminManageQuestions.Commands.UpdateQuestionOrchestrator;
+using static exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators.UpdateQuestionOrchestrator;
 
-namespace exam_system.Features.Quizzes.AdminManageQuestions.Commands
+namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
 {
     public record UpdateQuestionOrchestrator(
         Guid QuestionId,
@@ -10,7 +11,7 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Commands
         string? Explanation,
         int OrderIndex,
         IReadOnlyCollection<UpdateOption> Options
-    ) : IRequest<Unit>
+    ) : IRequest<RequestResponse<Unit>>
     {
         public record UpdateOption(
             string OptionText,
@@ -18,3 +19,4 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Commands
         );
     }
 }
+

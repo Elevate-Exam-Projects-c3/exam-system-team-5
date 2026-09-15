@@ -1,12 +1,13 @@
 ﻿using exam_system.Features.Quizzes.AdminUnpublishQuiz.Commands;
 using exam_system.Features.Quizzes.AdminUnpublishQuiz.Orchestrators;
 using exam_system.Features.Quizzes.AdminUnpublishQuiz.Queries;
+using exam_system.Features.Shared;
 using MediatR;
 
 namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
 {
     public class UnpublishQuizOrchestratorHandler
-        : IRequestHandler<UnpublishQuizOrchestrator, Unit>
+        : IRequestHandler<UnpublishQuizOrchestrator,RequestResponse<Unit>>
     {
         private readonly IMediator _mediator;
 
@@ -15,7 +16,7 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
             _mediator = mediator;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             UnpublishQuizOrchestrator request,
             CancellationToken cancellationToken)
         {
@@ -29,7 +30,7 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Handlers
                 new UnpublishQuizCommand(request.QuizId),
                 cancellationToken);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(Unit.Value, "Quiz successfully unpublished.");
         }
     }
 }

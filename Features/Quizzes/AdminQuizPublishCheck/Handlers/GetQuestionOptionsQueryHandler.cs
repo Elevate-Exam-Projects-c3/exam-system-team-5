@@ -1,6 +1,7 @@
 ﻿using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
+using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MapsterMapper;
 using MediatR;
@@ -9,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
 {
     public class GetQuestionOptionsQueryHandler
-        : IRequestHandler<GetQuestionOptionsQuery, List<GetQuestionOptionsResponse>>
+        : IRequestHandler<GetQuestionOptionsQuery, RequestResponse<List<GetQuestionOptionsResponse>>>
     {
         private readonly IGenericRepository<QuestionOption> _optionRepository;
         private readonly IMapper _mapper;
@@ -22,7 +23,7 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             _mapper = mapper;
         }
 
-        public async Task<List<GetQuestionOptionsResponse>> Handle(
+        public async Task<RequestResponse<List<GetQuestionOptionsResponse>>> Handle(
             GetQuestionOptionsQuery request,
             CancellationToken cancellationToken)
         {
@@ -31,7 +32,9 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
                                && !option.IsDeleted)
                 .ToListAsync(cancellationToken);
 
-            return _mapper.Map<List<GetQuestionOptionsResponse>>(options);
+            return RequestResponse<List<GetQuestionOptionsResponse>>.Ok(
+                _mapper.Map<List<GetQuestionOptionsResponse>>(options)
+            );
         }
     }
 }

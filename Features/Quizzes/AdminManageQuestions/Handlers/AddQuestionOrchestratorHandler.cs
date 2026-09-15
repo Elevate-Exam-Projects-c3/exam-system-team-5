@@ -1,11 +1,13 @@
 ﻿using exam_system.Features.Quizzes.AdminManageQuestions.Commands;
+using exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators;
 using exam_system.Features.Quizzes.AdminManageQuestions.Queries;
+using exam_system.Features.Shared;
 using MediatR;
 
-namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
+namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
 {
-    public class AddQuestionOrchestratorHandler
-        : IRequestHandler<AddQuestionOrchestrator, Unit>
+    public class AddQuestionOrchestratorHandler :
+        IRequestHandler<AddQuestionOrchestrator, RequestResponse<Unit>>
     {
         private readonly IMediator _mediator;
 
@@ -14,7 +16,7 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
             _mediator = mediator;
         }
 
-        public async Task<Unit> Handle(
+        public async Task<RequestResponse<Unit>> Handle(
             AddQuestionOrchestrator request,
             CancellationToken cancellationToken)
         {
@@ -49,7 +51,9 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Orchestrators
                     options),
                 cancellationToken);
 
-            return Unit.Value;
+            return RequestResponse<Unit>.Ok(
+                Unit.Value,
+                "Question added successfully.");
         }
     }
 }

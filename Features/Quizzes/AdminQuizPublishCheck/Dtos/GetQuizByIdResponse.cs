@@ -2,7 +2,7 @@
 {
     public class GetQuizByIdResponse
     {
-        public Guid QuizId { get; set; }
+        public Guid Id { get; set; }
         public int DurationMinutes { get; set; }
         public int PassScore { get; set; }
     }
