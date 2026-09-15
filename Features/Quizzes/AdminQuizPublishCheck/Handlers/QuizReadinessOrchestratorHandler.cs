@@ -1,9 +1,10 @@
 ﻿using exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos;
+using exam_system.Features.Quizzes.AdminQuizPublishCheck.Orchestrators;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
 using MapsterMapper;
 using MediatR;
 
-namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Orchestrators
+namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
 {
     public class QuizReadinessOrchestratorHandler
         : IRequestHandler<QuizReadinessOrchestrator, QuizReadinessResponse>

@@ -28,7 +28,10 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             var questions = await _questionRepository
                 .Get(q => q.QuizId == request.QuizId && !q.IsDeleted)
                 .ToListAsync(cancellationToken);
-            return questions.Select(q => _mapper.Map<GetQuizQuestionsResponse>(q)).ToList();
+
+            return questions
+                .Select(q => _mapper.Map<GetQuizQuestionsResponse>(q))
+                .ToList();
         }
     }
 }
