@@ -17,6 +17,7 @@ builder.Services.AddMapsterConfig();
 builder.Services.AddFluentValidationConfig();
 
 var app = builder.Build();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
@@ -51,7 +52,6 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseMiddleware<TransactionMiddleware>();
+app.UseAuthorization();
 app.MapControllers();
-
 app.Run();
