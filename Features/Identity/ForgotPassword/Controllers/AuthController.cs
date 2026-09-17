@@ -11,7 +11,6 @@ namespace exam_system.Features.Identity.ForgotPassword.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IMediator _mediator;
-
         public AuthController(IMediator mediator)
         {
             this._mediator = mediator;

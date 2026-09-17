@@ -50,8 +50,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseMiddleware<TransactionMiddleware>();
-app.UseAuthorization();
-app.UseAuthorization();
 app.MapControllers();
 app.Run();
