@@ -21,6 +21,7 @@ namespace exam_system.Features.Identity.Login.Handlers
         {
             var claims = new[]
             {
+                new Claim (JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.NameIdentifier, request.UserId.ToString()),
                 new Claim(ClaimTypes.Email, request.email),
                 new Claim(ClaimTypes.Role, request.UserRole.ToString())
