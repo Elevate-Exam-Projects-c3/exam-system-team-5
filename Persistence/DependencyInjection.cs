@@ -1,6 +1,9 @@
+using exam_system.Common.Behaviors;
 using exam_system.Common.Middleware;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Mapster;
 using MapsterMapper;
 using MediatR;
@@ -10,7 +13,9 @@ using System.Reflection;
 namespace exam_system.Persistence;
 public static class DependencyInjection
 {
-    public static IServiceCollection AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddPersistenceServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
             //?? "Server=(localdb)\\mssqllocaldb;Database=ExaminationSystem_Team5_Db;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False";
@@ -20,9 +25,11 @@ public static class DependencyInjection
 
         services.AddMediatR(typeof(Program));
 
-
+        //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SaveChangesBehavior<,>));
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<TransactionMiddleware>();
+
+        //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
@@ -34,6 +41,16 @@ public static class DependencyInjection
         mappingConfig.Scan(Assembly.GetExecutingAssembly());
 
         services.AddSingleton<IMapper>(new Mapper(mappingConfig));
+        return services;
+    }
+
+    public static IServiceCollection AddFluentValidationConfig(
+    this IServiceCollection services)
+    {
+        services.AddFluentValidationAutoValidation();
+
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
         return services;
     }
 }
