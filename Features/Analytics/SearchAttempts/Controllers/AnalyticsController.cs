@@ -1,4 +1,5 @@
-﻿using exam_system.Features.Analytics.SearchAttempts.ViewModels;
+﻿using exam_system.Features.Analytics.SearchAttempts.Queries;
+using exam_system.Features.Analytics.SearchAttempts.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ namespace exam_system.Features.Analytics.SearchAttempts.Controllers
         public AnalyticsController(IMediator mediator)
             => _mediator = mediator;
         [HttpGet]
-        public async Task<IActionResult> GetAttempts([FromQuery] GetAdminAttemptsViewModel query, CancellationToken cancellationToken)
-        => Ok(await _mediator.Send(query, cancellationToken));
+        public async Task<IActionResult> GetAttempts([FromQuery] GetAdminAttemptsViewModel filter, CancellationToken cancellationToken)
+        => Ok(await _mediator.Send(filter.ToDto(),cancellationToken));
     }
 }
