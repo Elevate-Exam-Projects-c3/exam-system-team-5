@@ -57,6 +57,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 //transaction middleware registeration 
+app.UseMiddleware<TransactionMiddleware>();
 
 app.UseHttpsRedirection();
 
