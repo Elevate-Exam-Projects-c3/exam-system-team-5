@@ -1,6 +1,7 @@
 ﻿using exam_system.Common.Enums;
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Attempts;
+using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Attempts.SubmitAttempt.Commands;
 using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
@@ -16,8 +17,23 @@ namespace exam_system.Features.Attempts.SubmitAttempt.Handlers
             // Ensure attempt is loaded with its Quiz navigation property
             var attempt = await repository.GetAll()
                 .Where(a => a.Id == request.AttemptId)
-                .Include(a => a.Quiz)
-                .FirstOrDefaultAsync(a => a.Id == request.AttemptId, cancellationToken);
+                .Select(a => new QuizAttempt
+                {
+                    Id = a.Id,
+                    Status = a.Status,
+                    Score = a.Score,
+                    SubmittedAt = a.SubmittedAt,
+                    Deadline = a.Deadline,
+                    Passed = a.Passed,
+                    Quiz = new Quiz
+                    {
+                        Id = a.Quiz.Id,
+                        PassScore = a.Quiz.PassScore
+                    }
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+
+
             var passScore = attempt.Quiz.PassScore;
             if (request.Score >= passScore)
             {
