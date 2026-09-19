@@ -24,8 +24,6 @@ builder.Services.AddFluentValidationConfig();
 var app = builder.Build();
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
-app.UseMiddleware<GlobalExceptionMiddleware>();
-
 // Seed Database automatically on startup
 using (var scope = app.Services.CreateScope())
 {
@@ -53,6 +51,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 //transaction middleware registeration 
+app.UseMiddleware<TransactionMiddleware>();
 
 app.UseHttpsRedirection();
 
