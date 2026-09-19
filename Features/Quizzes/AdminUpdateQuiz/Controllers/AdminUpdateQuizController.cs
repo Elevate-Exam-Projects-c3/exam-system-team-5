@@ -1,4 +1,5 @@
-﻿using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
+﻿using exam_system.Common.Constants;
+using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Orchestrators;
 using exam_system.Features.Quizzes.AdminUpdateQuiz.Commands;
 using exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers.ViewModels;
@@ -14,7 +15,7 @@ namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers
 {
     [ApiController]
     [Route("api/admin/quizzes/{QuizId:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = AppPolicies.RequireAdmin)]
     public class AdminUpdateQuizController(IMediator mediator) :ControllerBase
     {
         
