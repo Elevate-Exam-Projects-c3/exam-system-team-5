@@ -15,6 +15,7 @@ namespace exam_system.Features.Attempts.StartAttempt.Controllers
         {
 
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userIdString))
                 return Unauthorized();
 

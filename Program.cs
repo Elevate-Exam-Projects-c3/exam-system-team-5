@@ -1,14 +1,10 @@
 using exam_system.Common.Middleware;
-
 using exam_system.Features;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos;
-
-
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using System.Reflection;
+using exam_system.Infrastructure.Extensions;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 MapsterConfig.RegisterMappings();
@@ -20,8 +16,16 @@ builder.Services.AddSwaggerGen();
 // Add services from different layers
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddFeatureServices();
-builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
+builder.Services.AddFluentValidationConfig();
+
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
 
@@ -63,5 +67,4 @@ app.UseAuthorization();
 
 
 app.MapControllers();
-
 app.Run();
