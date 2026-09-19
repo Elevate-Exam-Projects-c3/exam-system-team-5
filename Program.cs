@@ -24,7 +24,7 @@ builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
 
 var app = builder.Build();
-app.UseMiddleware<ExceptionMiddleware>();
+
 // Seed Database automatically on startup
 using (var scope = app.Services.CreateScope())
 {
@@ -54,11 +54,12 @@ if (app.Environment.IsDevelopment())
 //transaction middleware registeration 
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<TransactionMiddleware>();
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<GlobalExceptionMiddleware>();
+
 
 
 app.MapControllers();

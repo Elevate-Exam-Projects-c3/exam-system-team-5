@@ -27,10 +27,10 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Handlers
             GetQuestionOptionsQuery request,
             CancellationToken cancellationToken)
         {
-            var options = await _optionRepository
+            var options =  _optionRepository
                 .Get(option => request.QuestionIds.Contains(option.QuestionId)
-                               && !option.IsDeleted)
-                .ToListAsync(cancellationToken);
+                               && !option.IsDeleted);
+                
 
             return RequestResponse<List<GetQuestionOptionsResponse>>.Ok(
                 _mapper.Map<List<GetQuestionOptionsResponse>>(options)
