@@ -14,6 +14,7 @@ namespace exam_system.Features.Attempts.StartAttempt.Controllers
         public async Task<IActionResult> StartAttempt([FromRoute] Guid QuizId, CancellationToken cancellationToken = default)
         {
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(userIdString))
                 return Unauthorized();
 
