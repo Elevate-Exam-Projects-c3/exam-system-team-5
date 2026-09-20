@@ -56,8 +56,6 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "swagger";
     });
 }
-//transaction middleware registeration 
-app.UseMiddleware<TransactionMiddleware>();
 
 app.UseHttpsRedirection();
 

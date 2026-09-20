@@ -1,4 +1,5 @@
-﻿using exam_system.Features.Diplomas.BrowseDiplomas.Controllers.ViewModels;
+﻿using exam_system.Common.CurrentUser;
+using exam_system.Features.Diplomas.BrowseDiplomas.Controllers.ViewModels;
 using exam_system.Features.Diplomas.GetDiplomaDetail.Controllers.ViewModel;
 using exam_system.Features.Diplomas.GetDiplomaDetail.Orchestrators;
 using exam_system.Features.Diplomas.GetDiplomaDetail.Queries;
@@ -16,13 +17,18 @@ namespace exam_system.Features.Diplomas.GetDiplomaDetail.Controllers
     public class GetDiplomaDetailController : ControllerBase
     {
         private readonly IMediator _mediator;
-        public GetDiplomaDetailController(IMediator mediator) => _mediator = mediator;
+        private readonly ICurrentUser _currentUser;
+        public GetDiplomaDetailController(IMediator mediator, ICurrentUser currentUser)
+        {
+            _mediator = mediator;
+            _currentUser = currentUser;
+        }
 
         [HttpGet("{diplomaId:guid}")]
         public async Task<IActionResult> GetById(Guid diplomaId, CancellationToken cancellationToken)
         {
-            var studentId = new Guid("aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa");
-            var result = await _mediator.Send(new GetDiplomaDetailOrchestrator(diplomaId, studentId), cancellationToken);
+            //var studentId = new Guid("aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa");
+            var result = await _mediator.Send(new GetDiplomaDetailOrchestrator(diplomaId, _currentUser.UserId), cancellationToken);
 
             //map
             var diplomaResult = result.Data.Adapt<DiplomaDetailResponseViewModel>();
