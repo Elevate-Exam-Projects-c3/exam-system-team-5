@@ -1,10 +1,13 @@
 using exam_system.Common.Middleware;
 using exam_system.Features;
+using exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos;
 using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Infrastructure.Extensions;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
+MapsterConfig.RegisterMappings();
 
 builder.Services.AddControllers().AddJsonOptions(opt =>
 opt.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
@@ -13,12 +16,18 @@ builder.Services.AddSwaggerGen();
 // Add services from different layers
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddFeatureServices();
-builder.Services.AddJwtAuthentication(builder.Configuration);
-builder.Services.AddTransient<TransactionMiddleware>();
 builder.Services.AddMapsterConfig();
+builder.Services.AddFluentValidationConfig();
+
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddHangfireServer();
 
 var app = builder.Build();
-app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Seed Database automatically on startup
 using (var scope = app.Services.CreateScope())
@@ -47,11 +56,16 @@ if (app.Environment.IsDevelopment())
     });
 }
 //transaction middleware registeration 
+app.UseMiddleware<TransactionMiddleware>();
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<TransactionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<TransactionMiddleware>();
+
+
+
+
 app.MapControllers();
 app.Run();

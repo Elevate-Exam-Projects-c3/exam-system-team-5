@@ -12,8 +12,8 @@ using exam_system.Persistence.Context;
 namespace exam_system.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260909084301_add-Start_End-date-to-quiz-entity")]
-    partial class addStart_Enddatetoquizentity
+    [Migration("20260915060948_AddStartEndDateToQuiz")]
+    partial class AddStartEndDateToQuiz
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

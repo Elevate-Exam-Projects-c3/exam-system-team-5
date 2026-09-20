@@ -1,4 +1,5 @@
-﻿using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
+﻿using exam_system.Common.Constants;
+using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Orchestrators;
 using exam_system.Features.Quizzes.AdminUpdateQuiz.Commands;
 using exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers.ViewModels;
@@ -7,13 +8,14 @@ using exam_system.Features.Shared;
 using exam_system.Features.Shared.DTOs;
 
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace exam_system.Features.Quizzes.AdminUpdateQuiz.Controllers
 {
     [ApiController]
     [Route("api/admin/quizzes/{QuizId:guid}")]
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Policy = AppPolicies.RequireAdmin)]
     public class AdminUpdateQuizController(IMediator mediator) :ControllerBase
     {
         
