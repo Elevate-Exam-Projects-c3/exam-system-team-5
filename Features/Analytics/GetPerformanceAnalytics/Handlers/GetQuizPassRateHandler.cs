@@ -1,50 +1,58 @@
-﻿using Dapper;
-using exam_system.Common.Enums;
+﻿using exam_system.Common.Enums;
+using exam_system.Domain.Entities.Attempts;
 using exam_system.Features.Analytics.GetPerformanceAnalytics.DTOs;
+using exam_system.Features.Analytics.GetPerformanceAnalytics.Extensions;
 using exam_system.Features.Analytics.GetPerformanceAnalytics.Queries;
+using exam_system.Persistence.DataAccess;
 using MediatR;
-using System.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace exam_system.Features.Analytics.GetPerformanceAnalytics.Handlers;
 
 public class GetQuizPassRateHandler : IRequestHandler<GetQuizPassRateQuery, IReadOnlyList<QuizPassRateDto>>
 {
-    private readonly IDbConnection _db;
+    private readonly IGenericRepository<QuizAttempt> _attemptRepo;
 
-    public GetQuizPassRateHandler(IDbConnection db)
-       => _db = db;
+    public GetQuizPassRateHandler(IGenericRepository<QuizAttempt> attemptRepo)
+        => _attemptRepo = attemptRepo;
 
-    public async Task<IReadOnlyList<QuizPassRateDto>> Handle(GetQuizPassRateQuery request, CancellationToken cancellationToken)
+    public async Task<IReadOnlyList<QuizPassRateDto>> Handle(
+        GetQuizPassRateQuery request,
+        CancellationToken cancellationToken)
     {
-        var f = request.Filter;
-        var dateToExclusive = f.DateTo?.Date.AddDays(1);
-        const string sql = @"
-           SELECT 
-                q.Id AS QuizId,
-                q.Title AS QuizTitle,
-                COUNT(a.Id) AS TotalAttempts,
-                COUNT(CASE WHEN a.Score >= q.PassScore THEN 1 END) AS PassedAttempts,
-                CAST(
-                    ROUND((CAST(COUNT(CASE WHEN a.Score >= q.PassScore THEN 1 END) AS FLOAT) / COUNT(a.Id)) * 100.0, 2)
-                AS FLOAT) AS PassRatePercentage
-            FROM Quizzes q
-            JOIN QuizAttempts a ON q.Id = a.QuizId AND a.Status = @CompletedStatus
-            WHERE (@DiplomaId IS NULL OR q.DiplomaId = @DiplomaId)
-              AND (@DateFrom IS NULL OR a.StartTime >= @DateFrom)
-              AND (@DateTo IS NULL OR a.StartTime < @DateTo)
-            GROUP BY q.Id, q.Title, q.PassScore
-            HAVING COUNT(a.Id) > 0
-            ORDER BY PassRatePercentage DESC;";
+        var groupedData = await _attemptRepo.GetAll()
+            .AsNoTracking()
+            .Where(a => a.Status == AttemptStatus.Submitted)
+            .ApplyAnalyticsFilter(request.DateFrom, request.DateTo, request.DiplomaId)
+            .Select(a => new
+            {
+                a.QuizId,
+                QuizTitle = a.Quiz.Title,
+                IsPassed = a.Score >= a.Quiz.PassScore ? 1 : 0
+            })
+            .GroupBy(x => new { x.QuizId, x.QuizTitle })
+            .Select(g => new
+            {
+                g.Key.QuizId,
+                g.Key.QuizTitle,
+                TotalAttempts = g.Count(),
+                PassedAttempts = g.Sum(x => x.IsPassed)
+            })
+            .ToListAsync(cancellationToken);
 
-        var command = new CommandDefinition(sql, new
-        {
-            f.DiplomaId,
-            f.DateFrom,
-            DateTo = dateToExclusive,
-            CompletedStatus = (int)AttemptStatus.Submitted
-        }, cancellationToken: cancellationToken);
+        var result = groupedData
+            .Select(x => new QuizPassRateDto(
+                x.QuizId,
+                x.QuizTitle,
+                x.TotalAttempts,
+                x.PassedAttempts,
+                x.TotalAttempts > 0
+                    ? Math.Round((double)x.PassedAttempts / x.TotalAttempts * 100.0, 2)
+                    : 0.0
+            ))
+            .OrderByDescending(x => x.PassRatePercentage)
+            .ToList();
 
-        var results = await _db.QueryAsync<QuizPassRateDto>(command);
-        return results.ToList().AsReadOnly();
+        return result;
     }
 }

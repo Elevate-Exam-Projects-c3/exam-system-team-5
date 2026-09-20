@@ -2,11 +2,9 @@
 
 namespace exam_system.Features.Analytics.GetPerformanceAnalytics.ViewModels
 {
-    public record AnalyticsFilterViewModel
-    {
-        public DateTime? DateFrom { get; init; }
-        public DateTime? DateTo { get; init; }
-        public Guid? DiplomaId { get; init; }
-        public AnalyticsFilterDto ToDto() => new(DateFrom, DateTo, DiplomaId);
-    }
+    public record AnalyticsFilterViewModel(
+    DateTime? DateFrom = null,
+    DateTime? DateTo = null,
+    Guid? DiplomaId = null
+);
 }

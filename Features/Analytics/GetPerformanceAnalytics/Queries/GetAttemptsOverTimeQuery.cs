@@ -1,11 +1,12 @@
 ﻿using exam_system.Features.Analytics.GetPerformanceAnalytics.DTOs;
-using MediatR;
 
 namespace exam_system.Features.Analytics.GetPerformanceAnalytics.Queries
 {
-    public record GetAttemptsOverTimeQuery(AnalyticsFilterDto Filter)
-        : BaseAnalyticsQuery<IReadOnlyList<AttemptsOverTimeDto>>(Filter)
+    public record GetAttemptsOverTimeQuery(
+    DateTime? DateFrom,
+    DateTime? DateTo,
+    Guid? DiplomaId) : BaseAnalyticsQuery<IReadOnlyList<AttemptsOverTimeDto>>(DateFrom, DateTo, DiplomaId)
     {
-        protected override string FeatureName => "attempts_time";
+        protected override string FeatureName => "attempts_over_time";
     }
 }

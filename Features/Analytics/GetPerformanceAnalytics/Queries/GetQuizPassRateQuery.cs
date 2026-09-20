@@ -1,10 +1,12 @@
-﻿using exam_system.Features.Analytics.Common;
-using exam_system.Features.Analytics.GetPerformanceAnalytics.DTOs;
-using MediatR;
+﻿using exam_system.Features.Analytics.GetPerformanceAnalytics.DTOs;
 
 namespace exam_system.Features.Analytics.GetPerformanceAnalytics.Queries
 {
-    public record GetQuizPassRateQuery(AnalyticsFilterDto Filter) : BaseAnalyticsQuery<IReadOnlyList<QuizPassRateDto>>(Filter)
+    public record GetQuizPassRateQuery(
+        DateTime? DateFrom, 
+        DateTime? DateTo,
+        Guid? DiplomaId)
+        : BaseAnalyticsQuery<IReadOnlyList<QuizPassRateDto>>(DateFrom,DateTo,DiplomaId)
     {
         protected override string FeatureName => "pass_rate";
     }
