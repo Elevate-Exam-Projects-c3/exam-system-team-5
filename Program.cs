@@ -28,7 +28,6 @@ builder.Services.AddHangfire(config => config
 builder.Services.AddHangfireServer();
 
 var app = builder.Build();
-app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Seed Database automatically on startup
 using (var scope = app.Services.CreateScope())
@@ -57,11 +56,16 @@ if (app.Environment.IsDevelopment())
     });
 }
 //transaction middleware registeration 
+app.UseMiddleware<TransactionMiddleware>();
 
 app.UseHttpsRedirection();
-
+app.UseMiddleware<GlobalExceptionMiddleware>();
+app.UseMiddleware<TransactionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<TransactionMiddleware>();
+
+
+
+
 app.MapControllers();
 app.Run();

@@ -2,7 +2,6 @@
 using exam_system.Features.Diplomas.AdminCreateDiploma.Commands;
 using exam_system.Features.Diplomas.AdminCreateDiploma.Controllers.ViewModels;
 using exam_system.Features.Shared;
-using exam_system.Migrations;
 using exam_system.Persistence.DataAccess;
 using Mapster;
 using MediatR;

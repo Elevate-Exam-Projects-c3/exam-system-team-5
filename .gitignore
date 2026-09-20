@@ -364,4 +364,3 @@ FodyWeavers.xsd
 # Local application settings
 appsettings.json
 Program.cs
-Migrations/

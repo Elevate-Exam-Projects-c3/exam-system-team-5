@@ -15,6 +15,7 @@ namespace exam_system.Features.Attempts.StartAttempt.Controllers
         [HttpPost]
         public async Task<IActionResult> StartAttempt([FromRoute] Guid QuizId, CancellationToken cancellationToken = default)
         {
+
             var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (string.IsNullOrEmpty(userIdString))
@@ -22,9 +23,7 @@ namespace exam_system.Features.Attempts.StartAttempt.Controllers
 
             if (!Guid.TryParse(userIdString, out var userGuidId))
                 return BadRequest(new { Message = "Invalid user identifier" });
-
             var result = await mediator.Send(new StartAttemptOrchestrator(QuizId, userGuidId), cancellationToken);
-
             var response = EndpointResponse<bool>.FromResult(result);
             return StatusCode(response.StatusCode, response);
 
