@@ -7,7 +7,7 @@ namespace exam_system.Features.Diplomas.GetStudentDashboard.Dtos
         Guid QuizId,
         string QuizTitle,
         AttemptStatus Status,
-        decimal? Score,
+        double? Score,
         bool? Passed,
         DateTime StartTime,
         DateTime? SubmittedAt);

@@ -19,8 +19,13 @@ namespace exam_system.Features.Diplomas.GetStudentDashboard.Handlers
         {
             var diplomas = await _enrollmentRepository
                 .Get(e => e.StudentId == request.StudentId)
-                .ProjectToType<EnrolledDiplomaSummaryDto>()
-                .ToListAsync(cancellationToken);
+                .Select(e => new EnrolledDiplomaSummaryDto
+                (
+                      e.DiplomaId,
+                      e.Diploma.Title,
+                      e.EnrolledAt
+
+                )).ToListAsync(cancellationToken);
 
             return RequestResponse<List<EnrolledDiplomaSummaryDto>>.Ok(diplomas);
         }
