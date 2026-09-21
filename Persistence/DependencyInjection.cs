@@ -1,5 +1,6 @@
 using exam_system.Features.Analytics.Behaviors;
 using exam_system.Common.Behaviors;
+using exam_system.Common.CurrentUser;
 using exam_system.Common.Middleware;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
@@ -30,11 +31,12 @@ public static class DependencyInjection
         services.AddMediatR(typeof(Program));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehavior<,>));
 
+        services.AddHttpContextAccessor();
         //services.AddScoped(typeof(IPipelineBehavior<,>), typeof(SaveChangesBehavior<,>));
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<TransactionMiddleware>();
+        services.AddScoped<ICurrentUser, CurrentUser>();
 
-        //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
