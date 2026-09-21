@@ -1,6 +1,6 @@
 ﻿namespace exam_system.Features.Diplomas.GetStudentDashboard.Dtos
 {
-    public record RecentAttemptSummary(
+    public record RecentAttemptSummaryDto(
         Guid AttemptId,
         Guid QuizId,
         string QuizTitle,

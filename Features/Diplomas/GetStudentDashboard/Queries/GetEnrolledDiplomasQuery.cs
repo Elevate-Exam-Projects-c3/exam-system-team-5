@@ -4,5 +4,6 @@ using MediatR;
 
 namespace exam_system.Features.Diplomas.GetStudentDashboard.Queries
 {
-    public record GetStudentDashboardQuery(Guid StudentId) : IRequest<RequestResponse<StudentDashboardResponse>>;
+    public record GetEnrolledDiplomasQuery(Guid StudentId) : IRequest<RequestResponse<List<EnrolledDiplomaSummaryDto>>>;
+
 }

@@ -1,4 +1,5 @@
 ﻿using exam_system.Common.CurrentUser;
+using exam_system.Features.Diplomas.GetStudentDashboard.Orchestrators;
 using exam_system.Features.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -22,8 +23,7 @@ namespace exam_system.Features.Diplomas.GetStudentDashboard.Controllers
         [HttpGet("dashboard")]
         public async Task<IActionResult> GetDashboard(CancellationToken cancellationToken)
         {
-           
-            var result = await _mediator.Send(new GetStudentDashboardQuery(_currentUser.UserId), cancellationToken);
+            var result = await _mediator.Send(new GetStudentDashboardOrchestrator(_currentUser.UserId), cancellationToken);
             var response = EndpointResponse<StudentDashboardResponseViewModel>.FromResult(result);
             return StatusCode(response.StatusCode, response);
         }
