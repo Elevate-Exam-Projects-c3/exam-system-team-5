@@ -31,6 +31,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<TransactionMiddleware>();
         services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped<ExpiredAttemptsSweepJob>();
+
 
 
         return services;
