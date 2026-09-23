@@ -1,0 +1,31 @@
+﻿using exam_system.Features.Analytics.SearchAttempts.Queries;
+using exam_system.Features.Analytics.SearchAttempts.ViewModels;
+using exam_system.Features.Shared;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace exam_system.Features.Analytics.SearchAttempts.Controllers
+{
+    [ApiController]
+    [Route("api/admin/attempts")]
+    [Authorize(Roles = "Admin")]
+    public class AnalyticsController : ControllerBase
+    {
+        private readonly IMediator _mediator;
+        public AnalyticsController(IMediator mediator)
+            => _mediator = mediator;
+        [HttpGet]
+        public async Task<IActionResult> GetAttempts([FromQuery] GetAdminAttemptsViewModel filter, CancellationToken cancellationToken)
+        {
+          var response =   await _mediator.Send(new GetAdminAttemptsQuery(
+               filter.QuizId,
+               filter.StudentId
+               , filter.Status,
+               filter.SortDescending,
+               filter.PageIndex, filter.PageSize),
+               cancellationToken);
+            return Ok(ApiResponse.Ok(response));
+        }
+    }
+}

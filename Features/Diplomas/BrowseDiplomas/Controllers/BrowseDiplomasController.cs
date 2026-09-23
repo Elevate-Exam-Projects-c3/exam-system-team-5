@@ -1,4 +1,5 @@
 ﻿
+using exam_system.Common.CurrentUser;
 using exam_system.Domain.Entities.Identity;
 using exam_system.Features.Diplomas.BrowseDiplomas.Controllers.ViewModels;
 using exam_system.Features.Diplomas.BrowseDiplomas.Dtos;
@@ -21,20 +22,22 @@ namespace exam_system.Features.Diplomas.BrowseDiplomas.Controllers
     public class BrowseDiplomasController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly ICurrentUser _currentUser;
 
-        public BrowseDiplomasController(IMediator mediator ) 
-        { 
-           _mediator = mediator;
+        public BrowseDiplomasController(IMediator mediator, ICurrentUser currentUser)
+        {
+            _mediator = mediator;
+            _currentUser = currentUser;
         }
 
         [HttpGet("GetStudentDiploma")]
         public async Task<IActionResult> GetStudentDiploma([FromQuery] DiplomaItemsRequestViewModel request, CancellationToken cancellationToken = default)
         {
             //test
-            Guid studentId = new Guid("aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa");
+            //Guid studentId = new Guid("aaaaaaaa-1111-1111-1111-aaaaaaaaaaaa");
 
 
-            var getDiplomasQueryResult = await _mediator.Send(new GetDiplomasQuery(studentId, request.PageIndex, request.PageSize),cancellationToken);
+            var getDiplomasQueryResult = await _mediator.Send(new GetDiplomasQuery(_currentUser.UserId, request.PageIndex, request.PageSize),cancellationToken);
 
             if (!getDiplomasQueryResult.Success)
             {
