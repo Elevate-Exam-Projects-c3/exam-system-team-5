@@ -5,7 +5,6 @@ using exam_system.Features.Shared;
 using exam_system.Persistence.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace exam_system.Features.Attempts.CheckRemainingTime.Handlers
 {
@@ -16,30 +15,34 @@ namespace exam_system.Features.Attempts.CheckRemainingTime.Handlers
             => _attemptRepository = attemptRepository;
         public async Task<RequestResponse<bool>> Handle(AutoSubmitExpiredAttemptCommand command, CancellationToken cancellationToken)
         {
-            var attempt = await _attemptRepository.Get(a => a.Id == command.AttemptId)
-                .FirstOrDefaultAsync(cancellationToken);
+            var attemptInfo = await _attemptRepository.Get(a => a.Id == command.AttemptId)
+                    .Select(a => new
+                    {
+                        a.Status,
+                        a.Deadline,
+                        PassScore = a.Quiz.PassScore,
+                        TotalAnswers = a.Answers.Count,
+                        CorrectAnswers = a.Answers.Count(ans => ans.SelectedOption != null && ans.SelectedOption.IsCorrect)
+                    })
+                    .FirstOrDefaultAsync(cancellationToken);
 
-            if (attempt is null)
+            if (attemptInfo is null)
                 return RequestResponse<bool>.Fail("Attempt not found.", 404);
 
-            // مش in_progress أصلًا (خلاص Submitted/TimedOut) → مفيش حاجة تتعمل، مش خطأ
-            if (attempt.Status != AttemptStatus.InProgress)
+            if (attemptInfo.Status != AttemptStatus.InProgress || DateTime.UtcNow < attemptInfo.Deadline)
                 return RequestResponse<bool>.Ok(false);
 
-            // لسه في وقته → مفيش auto-submit
-            if (DateTime.UtcNow < attempt.Deadline)
-                return RequestResponse<bool>.Ok(false);
+            var score = attemptInfo.TotalAnswers > 0
+                ? (double)(attemptInfo.CorrectAnswers / attemptInfo.TotalAnswers * 100): 0;
 
-            // ⚠️ هنا بالظبط لازم أعرف: عندك منطق تصحيح جاهز من EXAM-22 (Submit & Score)؟
-            // المفروض السطرين دول ينادوا **نفس** الكود اللي EXAM-22 بيستخدمه، مش نسخة تانية منفصلة
-            foreach (var answer in attempt.Answers)
-                answer.IsCorrect = answer.SelectedOption?.IsCorrect ?? false;
-
-            var correctCount = attempt.Answers.Count(a => a.IsCorrect == true);
-            //attempt.Score = attempt.Answers.Count > 0 ? (decimal)correctCount / attempt.Answers.Count * 100 : 0;
-            attempt.Passed = attempt.Score >= attempt.Quiz.PassScore;
-            attempt.Status = AttemptStatus.TimedOut;
-            attempt.SubmittedAt = DateTime.UtcNow;
+            await _attemptRepository.UpdateAsync(
+                a => a.Id == command.AttemptId,
+                setters => setters
+                    .SetProperty(a => a.Status, AttemptStatus.TimedOut)
+                    .SetProperty(a => a.Score, score)
+                    .SetProperty(a => a.Passed, score >= attemptInfo.PassScore)
+                    .SetProperty(a => a.SubmittedAt, DateTime.UtcNow),
+                cancellationToken);
 
             return RequestResponse<bool>.Ok(true);
         }

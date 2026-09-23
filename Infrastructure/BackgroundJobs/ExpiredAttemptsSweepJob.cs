@@ -11,12 +11,13 @@ namespace exam_system.Infrastructure.BackgroundJobs
 
         public async Task ExecuteAsync()
         {
+            // get alll expired attempts and calculate score and submit them
             var expiredResult = await _mediator.Send(new GetExpiredInProgressAttemptsQuery());
 
             foreach (var attemptId in expiredResult.Data ?? new List<Guid>())
             {
                 await _mediator.Send(new AutoSubmitExpiredAttemptCommand(attemptId));
-                // ⬅️ نفس القطعة بالظبط اللي EXAM-20 وEXAM-21 بينادوها — منطق التصحيح مكتوب مرة واحدة بس
+               
             }
         }
     }
