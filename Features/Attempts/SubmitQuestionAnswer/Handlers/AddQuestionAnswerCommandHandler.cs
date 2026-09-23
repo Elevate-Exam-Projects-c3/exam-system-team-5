@@ -24,6 +24,7 @@ namespace exam_system.Features.Attempts.SubmitQuestionAnswer.Handlers
             if (result != null)
             {
                 result.SelectedOptionId = request.Option.Id;
+                result.IsCorrect = request.Option.IsCorrect;
                 await _studentQuestionAnswerRepository.UpdateAsync(result);
                 return RequestResponse<uint>.Ok(1, "Answer updated successfully");
             }
