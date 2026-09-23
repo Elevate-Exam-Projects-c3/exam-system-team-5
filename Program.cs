@@ -13,6 +13,7 @@ builder.Services.AddControllers().AddJsonOptions(opt =>
 opt.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 // Add services from different layers
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddFeatureServices();
@@ -24,7 +25,7 @@ builder.Services.AddHangfire(config => config
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
-
+builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddHangfireServer();
 
 var app = builder.Build();
