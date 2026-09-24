@@ -1,6 +1,4 @@
 ﻿namespace exam_system.Features.Attempts.CheckRemainingTime.Dtos
 {
-    public class TimeRemainingResponseDto
-    {
-    }
+    public record TimeRemainingResponseDto(string Status, int? RemainingSeconds);
 }
