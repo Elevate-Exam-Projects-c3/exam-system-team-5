@@ -1,4 +1,5 @@
 ﻿using exam_system.Features.Attempts.CheckRemainingTime.Commands;
+using exam_system.Features.Attempts.CheckRemainingTime.Orchestrators;
 using exam_system.Features.Attempts.CheckRemainingTime.Queries;
 using MediatR;
 
@@ -16,7 +17,7 @@ namespace exam_system.Infrastructure.BackgroundJobs
 
             foreach (var attemptId in expiredResult.Data ?? new List<Guid>())
             {
-                await _mediator.Send(new AutoSubmitExpiredAttemptCommand(attemptId));
+                await _mediator.Send(new CloseExpiredAttemptOrchestrator(attemptId));
                
             }
         }

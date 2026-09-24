@@ -4,7 +4,5 @@ using MediatR;
 
 namespace exam_system.Features.Attempts.CheckRemainingTime.Commands
 {
-
-    public record ScoreAttemptCommand(Guid AttemptId) : IRequest<RequestResponse<AttemptScoreDto>>;
-
+    public record UpdateAnswersCorrectnessCommand(List<AnswerCorrectnessDto> Answers) : IRequest<RequestResponse<Unit>>;
 }
