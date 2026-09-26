@@ -1,4 +1,5 @@
-﻿using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
+﻿using exam_system.Common.Constants;
+using exam_system.Features.Quizzes.AdminCreateQuiz.Commands;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Controllers.ViewModels;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Handlers;
 using exam_system.Features.Quizzes.AdminCreateQuiz.Orchestrators;
@@ -11,7 +12,7 @@ namespace exam_system.Features.Quizzes.AdminCreateQuiz.Controllers
 {
     [ApiController]
     [Route("api/admin/quizzes/{diplomaId:guid}")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Policy = AppPolicies.RequireAdmin)]
     public class AdminCreateQuizController( IMediator mediator) : ControllerBase
     {
         [HttpPost]

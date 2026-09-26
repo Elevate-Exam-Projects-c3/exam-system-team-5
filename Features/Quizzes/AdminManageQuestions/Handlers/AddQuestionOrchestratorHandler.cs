@@ -20,15 +20,15 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
             AddQuestionOrchestrator request,
             CancellationToken cancellationToken)
         {
-            // 1. Make sure the quiz exists
+          
             await _mediator.Send(
                 new GetQuizByIdQuery(request.QuizId),
                 cancellationToken);
 
-            // 2. Generate QuestionId
+        
             var questionId = Guid.NewGuid();
 
-            // 3. Add Question
+           
             await _mediator.Send(
                 new AddQuestionCommand(
                     questionId,

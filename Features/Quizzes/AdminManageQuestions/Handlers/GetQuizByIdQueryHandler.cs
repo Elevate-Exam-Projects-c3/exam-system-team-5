@@ -1,10 +1,12 @@
-﻿using exam_system.Domain.Entities.Quizzes;
+﻿using exam_system.Common.Middleware;
+using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminManageQuestions.Dtos;
 using exam_system.Features.Quizzes.AdminManageQuestions.Queries;
 using exam_system.Persistence.DataAccess;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 
 namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
 {
@@ -25,7 +27,18 @@ namespace exam_system.Features.Quizzes.AdminManageQuestions.Handlers
             GetQuizByIdQuery request,
             CancellationToken cancellationToken)
         {
-            var quiz = await _quizRepository.GetByIdAsync(request.QuizId);
+            var quiz = await _quizRepository.GetAll()
+                .Where(q => q.Id == request.QuizId).Select(q => new Quiz
+                {
+                    Id = q.Id,
+                    Status = q.Status,
+
+                })
+                .FirstOrDefaultAsync(cancellationToken);
+            if (quiz == null)
+            {
+                throw new NotFoundException("Quiz not found.");
+            }
 
             var quizResponse = _mapper.Map<GetQuizByIdResponse>(quiz);
 

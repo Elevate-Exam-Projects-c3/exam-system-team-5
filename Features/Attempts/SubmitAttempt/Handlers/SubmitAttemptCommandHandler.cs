@@ -21,9 +21,9 @@ namespace exam_system.Features.Attempts.SubmitAttempt.Handlers
                 {
                     Id = a.Id,
                     Status = a.Status,
-                    Score = a.Score,
-                    SubmittedAt = a.SubmittedAt,
                     Deadline = a.Deadline,
+                    SubmittedAt = a.SubmittedAt,
+                    Score = a.Score,
                     Passed = a.Passed,
                     Quiz = new Quiz
                     {
@@ -33,22 +33,21 @@ namespace exam_system.Features.Attempts.SubmitAttempt.Handlers
                 })
                 .FirstOrDefaultAsync(cancellationToken);
 
+            if (attempt is null)
+            {
+                throw new NotFoundException("The attempt was not found");
+            }
 
             var passScore = attempt.Quiz.PassScore;
             if (request.Score >= passScore)
             {
                 attempt.Passed = true;
             }
-
             else
             {
                 attempt.Passed = false;
             }
 
-            if (attempt is null)
-            {
-                throw new NotFoundException("The attempt was not found");
-            }
             if (attempt.Status == AttemptStatus.Submitted)
             {
                 return RequestResponse<bool>.Fail("Attempt already submitted", 400);
