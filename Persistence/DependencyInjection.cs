@@ -1,6 +1,7 @@
 using exam_system.Common.Behaviors;
 using exam_system.Common.CurrentUser;
 using exam_system.Common.Middleware;
+using exam_system.Infrastructure.BackgroundJobs;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
 using FluentValidation;
