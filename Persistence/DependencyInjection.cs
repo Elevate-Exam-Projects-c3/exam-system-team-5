@@ -2,6 +2,7 @@ using exam_system.Features.Analytics.Behaviors;
 using exam_system.Common.Behaviors;
 using exam_system.Common.CurrentUser;
 using exam_system.Common.Middleware;
+using exam_system.Infrastructure.BackgroundJobs;
 using exam_system.Persistence.Context;
 using exam_system.Persistence.DataAccess;
 using FluentValidation;
@@ -36,6 +37,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<TransactionMiddleware>();
         services.AddScoped<ICurrentUser, CurrentUser>();
+        services.AddScoped<ExpiredAttemptsSweepJob>();
+
 
 
         return services;

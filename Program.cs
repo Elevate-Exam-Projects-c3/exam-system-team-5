@@ -5,6 +5,7 @@ using exam_system.Persistence;
 using exam_system.Persistence.Context;
 using exam_system.Infrastructure.Extensions;
 using Hangfire;
+using exam_system.Infrastructure.BackgroundJobs;
 
 var builder = WebApplication.CreateBuilder(args);
 MapsterConfig.RegisterMappings();
@@ -61,9 +62,11 @@ app.UseMiddleware<GlobalExceptionMiddleware>();
 app.UseMiddleware<TransactionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<TransactionMiddleware>();
 
-
-
+//hangfire registration for expired attempts sweep job
+RecurringJob.AddOrUpdate<ExpiredAttemptsSweepJob>("sweep-expired-attempts",
+    job => job.ExecuteAsync(),"*/1 * * * *");
 
 app.MapControllers();
 app.Run();
