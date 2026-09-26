@@ -31,8 +31,7 @@ namespace exam_system.Features.Attempts.CheckRemainingTime.Handlers
                 return RequestResponse<AttemptScoreDto>.Fail("Attempt not found.", 404);
 
             var score = attempt.Answers.Count > 0
-                ? (double)attempt.Answers.Count(a => a.IsCorrect) / attempt.Answers.Count * 100
-                : 0;
+                ? (double)attempt.Answers.Count(a => a.IsCorrect) / attempt.Answers.Count * 100: 0;
 
             var answerResults = attempt.Answers.Select(a => new AnswerCorrectnessDto(a.Id, a.IsCorrect)).ToList();
 

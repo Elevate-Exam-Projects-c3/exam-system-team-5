@@ -32,7 +32,7 @@ namespace exam_system.Features.Attempts.CheckRemainingTime.Handlers
             if (attempt.StudentId != request.StudentId)
                 return RequestResponse<TimeRemainingResponseDto>.Fail("You do not own this attempt.", 403);
 
-            //check if the attempt is in progress
+            //check if the attempt status now
             if (attempt.Status != AttemptStatus.InProgress)
                 return RequestResponse<TimeRemainingResponseDto>.Ok(new TimeRemainingResponseDto(attempt.Status.ToString(), null));
 
