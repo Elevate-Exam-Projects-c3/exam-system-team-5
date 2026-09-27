@@ -10,6 +10,9 @@ namespace exam_system.Features.Quizzes.AdminQuizPublishCheck.Dtos
             TypeAdapterConfig<Question, GetQuizQuestionsResponse>
                 .NewConfig()
                 .Map(dest => dest.QuestionId, src => src.Id);
+
+            TypeAdapterConfig<QuestionOption, GetQuestionOptionsResponse>.NewConfig()
+                .Map(dest => dest.OptionId, src => src.Id);
         }
     }
 }

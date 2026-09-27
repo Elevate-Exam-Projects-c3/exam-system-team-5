@@ -17,7 +17,7 @@ namespace exam_system.Features.Quizzes.AdminUnpublishQuiz.Controllers
             _mediator = mediator;
         }
 
-            [HttpPatch("/unpublish/{id}")]
+            [HttpPatch("/{id}/unpublish")]
             public async Task<IActionResult> Unpublish(
                 Guid id,
                 CancellationToken cancellationToken)

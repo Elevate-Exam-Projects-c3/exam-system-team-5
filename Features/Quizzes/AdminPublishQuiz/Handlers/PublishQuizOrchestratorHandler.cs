@@ -2,6 +2,7 @@
 using exam_system.Common.Middleware;
 using exam_system.Domain.Entities.Quizzes;
 using exam_system.Features.Quizzes.AdminPublishQuiz.Commands;
+using exam_system.Features.Quizzes.AdminPublishQuiz.Orchestrators;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Orchestrators;
 using exam_system.Features.Quizzes.AdminQuizPublishCheck.Queries;
 using exam_system.Features.Shared;
